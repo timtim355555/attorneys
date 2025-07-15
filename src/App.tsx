@@ -426,12 +426,6 @@ function App() {
                   <span>GitHub Sync</span>
                 </button>
               )}
-              <button
-                onClick={() => setIsAdmin(!isAdmin)}
-                className={`px-3 py-1 rounded text-sm ${isAdmin ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}`}
-              >
-                {isAdmin ? 'Admin' : 'User'}
-              </button>
             </div>
             
             <button 
