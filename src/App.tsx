@@ -10,6 +10,58 @@ import { GitHubSync } from './components/GitHubSync';
 import { SchemaMarkup } from './components/SchemaMarkup';
 import { SEOHead } from './components/SEOHead';
 
+// Preload critical images
+const preloadImage = (src: string) => {
+  const link = document.createElement('link');
+  link.rel = 'preload';
+  link.as = 'image';
+  link.href = src;
+  document.head.appendChild(link);
+};
+
+// Lazy loading component for images
+const LazyImage: React.FC<{
+  src: string;
+  alt: string;
+  className: string;
+  priority?: boolean;
+}> = ({ src, alt, className, priority = false }) => {
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
+
+  React.useEffect(() => {
+    if (priority) {
+      preloadImage(src);
+    }
+  }, [src, priority]);
+
+  return (
+    <div className={`${className} bg-gray-200 flex items-center justify-center`}>
+      {!loaded && !error && (
+        <div className="animate-pulse bg-gray-300 w-full h-full flex items-center justify-center">
+          <Users className="h-8 w-8 text-gray-400" />
+        </div>
+      )}
+      <img
+        src={src}
+        alt={alt}
+        className={`${className} transition-opacity duration-300 ${
+          loaded ? 'opacity-100' : 'opacity-0'
+        } ${error ? 'hidden' : ''}`}
+        onLoad={() => setLoaded(true)}
+        onError={() => setError(true)}
+        loading={priority ? 'eager' : 'lazy'}
+        decoding="async"
+      />
+      {error && (
+        <div className={`${className} bg-gray-100 flex items-center justify-center`}>
+          <Users className="h-8 w-8 text-gray-400" />
+        </div>
+      )}
+    </div>
+  );
+};
+
 const practiceAreas = [
   "Corporate Law", "Criminal Defense", "Family Law", "Personal Injury", 
   "Real Estate Law", "Immigration Law", "Tax Law", "Employment Law",
@@ -44,6 +96,14 @@ function App() {
   const [showSitemapManager, setShowSitemapManager] = useState(false);
   const [showGitHubSync, setShowGitHubSync] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false); // Toggle this for admin features
+
+  // Preload first few lawyer images for better LCP
+  React.useEffect(() => {
+    const firstFewLawyers = lawyers.slice(0, 6);
+    firstFewLawyers.forEach(lawyer => {
+      preloadImage(lawyer.image);
+    });
+  }, []);
 
   const handleSearch = () => {
     let filtered = lawyers;
@@ -182,10 +242,11 @@ function App() {
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div className="relative h-64 bg-gradient-to-r from-blue-900 to-blue-700">
               <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-              <img 
+              <LazyImage
                 src={selectedLawyer.image} 
                 alt={selectedLawyer.name}
                 className="absolute bottom-4 left-1/2 transform -translate-x-1/2 md:left-8 md:transform-none w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white object-cover"
+                priority={true}
               />
             </div>
             
@@ -615,7 +676,7 @@ function App() {
 
         {/* Lawyer Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredLawyers.map(lawyer => (
+          {filteredLawyers.map((lawyer, index) => (
             <div 
               key={lawyer.id} 
               className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-1"
@@ -628,10 +689,11 @@ function App() {
               }}
             >
               <div className="relative h-48">
-                <img 
+                <LazyImage
                   src={lawyer.image} 
                   alt={lawyer.name}
                   className="w-full h-full object-cover"
+                  priority={index < 6}
                 />
                 <div className="absolute top-4 right-4 bg-white rounded-full px-3 py-1 shadow-lg">
                   <div className="flex items-center space-x-1">
