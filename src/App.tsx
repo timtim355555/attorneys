@@ -435,6 +435,119 @@ function App() {
     e.preventDefault();
   };
 
+  // Avvo-style Footer Component
+  const AvvoFooter = () => {
+    return (
+      <footer className="bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Popular Cities */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Popular Cities</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">New York Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Los Angeles Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Chicago Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Houston Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Phoenix Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Philadelphia Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">San Antonio Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">San Diego Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Dallas Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">San Jose Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Austin Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Jacksonville Lawyers</a></li>
+              </ul>
+            </div>
+
+            {/* Popular Practice Areas */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Popular Practice Areas</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Personal Injury Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Criminal Defense Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Family Law Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">DUI Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Business Law Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Real Estate Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Immigration Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Employment Law Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Bankruptcy Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Estate Planning Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Tax Law Lawyers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Medical Malpractice Lawyers</a></li>
+              </ul>
+            </div>
+
+            {/* About */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">About</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">About Attorneys-deets</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">How It Works</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Legal Advice</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Lawyer Reviews</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Legal Forms</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Legal Research</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Find a Lawyer</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Legal Topics</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Careers</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Press</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Contact Us</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Help Center</a></li>
+              </ul>
+            </div>
+
+            {/* For Lawyers */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">For Lawyers</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Join Attorneys-deets</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Lawyer Marketing</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Advertise with Us</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Lawyer Directory</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Premium Profiles</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Client Reviews</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Legal Blog</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Webinars</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Resources</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Success Stories</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Pricing</a></li>
+                <li><a href="#" className="text-gray-300 hover:text-white text-sm">Support</a></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Section */}
+          <div className="border-t border-gray-700 mt-8 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div className="flex items-center mb-4 md:mb-0">
+                <h2 className="text-2xl font-bold text-blue-400 mr-8">Attorneys-deets</h2>
+                <p className="text-gray-400 text-sm">
+                  © 2024 Attorneys-deets. All rights reserved.
+                </p>
+              </div>
+              <div className="flex space-x-6">
+                <a href="#" className="text-gray-400 hover:text-white text-sm">Privacy Policy</a>
+                <a href="#" className="text-gray-400 hover:text-white text-sm">Terms of Service</a>
+                <a href="#" className="text-gray-400 hover:text-white text-sm">Cookie Policy</a>
+                <a href="#" className="text-gray-400 hover:text-white text-sm">Disclaimer</a>
+              </div>
+            </div>
+            
+            {/* Additional Info */}
+            <div className="mt-6 pt-6 border-t border-gray-700">
+              <p className="text-gray-400 text-sm text-center">
+                Attorneys-deets is a comprehensive legal directory connecting clients with qualified attorneys. 
+                Our platform provides verified lawyer profiles, client reviews, and easy communication tools to help you find the right legal representation.
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Avvo-style Header */}
@@ -513,6 +626,9 @@ function App() {
           </div>
         </div>
       </div>
+      
+      {/* Avvo-style Footer */}
+      <AvvoFooter />
     </div>
   );
 }
