@@ -7,6 +7,9 @@ export interface Lawyer {
   email: string;
   college: string;
   about: string;
+  rating: number;
+  reviews: number;
+  verified: boolean;
 }
 
 export interface PracticeArea {
