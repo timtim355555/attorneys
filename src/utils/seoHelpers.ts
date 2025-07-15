@@ -20,7 +20,7 @@ export const generateFAQSchema = (lawyer: Lawyer) => {
     },
     {
       question: `How can I contact ${lawyer.name}?`,
-      answer: `You can reach ${lawyer.name} by phone at ${lawyer.phone} or by email at ${lawyer.email}${lawyer.website ? `. You can also visit their website at ${lawyer.website} for more information` : ''}. They are currently ${lawyer.availability?.toLowerCase() || 'available'} for new clients.`
+      answer: `You can call ${lawyer.name} directly at ${lawyer.phone} or send an email to ${lawyer.email}${lawyer.website ? `. You can also visit their website at ${lawyer.website} for more information` : ''}. They are currently ${lawyer.availability?.toLowerCase() || 'available'} for new clients and offer phone consultations.`
     },
     {
       question: `What are ${lawyer.name}'s qualifications and experience?`,
@@ -28,7 +28,7 @@ export const generateFAQSchema = (lawyer: Lawyer) => {
     },
     {
       question: `Is ${lawyer.name} accepting new clients?`,
-      answer: `${lawyer.name} is currently ${lawyer.availability?.toLowerCase() || 'available'} for new clients. ${lawyer.availability === 'Limited' ? 'Due to high demand, availability may be limited.' : lawyer.availability === 'Busy' ? 'They have limited availability but may be able to accommodate urgent matters.' : 'They are actively accepting new cases.'} Contact them at ${lawyer.phone} to discuss your legal needs.`
+      answer: `${lawyer.name} is currently ${lawyer.availability?.toLowerCase() || 'available'} for new clients. ${lawyer.availability === 'Limited' ? 'Due to high demand, availability may be limited.' : lawyer.availability === 'Busy' ? 'They have limited availability but may be able to accommodate urgent matters.' : 'They are actively accepting new cases.'} Call them directly at ${lawyer.phone} to discuss your legal needs and schedule a consultation.`
     },
     {
       question: `What makes ${lawyer.name} different from other lawyers?`,
@@ -36,7 +36,7 @@ export const generateFAQSchema = (lawyer: Lawyer) => {
     },
     {
       question: `Does ${lawyer.name} offer free consultations?`,
-      answer: `Contact ${lawyer.name} at ${lawyer.phone} to inquire about consultation options and fees. Many attorneys offer initial consultations to discuss your case and determine if they're the right fit for your legal needs.`
+      answer: `Call ${lawyer.name} at ${lawyer.phone} to inquire about consultation options and fees. Many attorneys offer initial phone consultations to discuss your case and determine if they're the right fit for your legal needs.`
     }
   ];
 

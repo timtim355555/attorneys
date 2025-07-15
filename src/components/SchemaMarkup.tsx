@@ -136,7 +136,7 @@ export const SchemaMarkup: React.FC<SchemaMarkupProps> = ({
             "@type": "ContactAction",
             "target": {
               "@type": "EntryPoint",
-              "urlTemplate": `tel:${lawyer.phone}`,
+              "urlTemplate": `tel:${lawyer.phone.replace(/[^\d]/g, '')}`,
               "inLanguage": lawyer.languages || ["English"]
             }
           },

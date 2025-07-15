@@ -210,8 +210,12 @@ function App() {
                     <div className="space-y-3">
                       <div className="flex items-center space-x-3">
                         <Phone className="h-5 w-5 text-blue-900" />
-                        <a href={`tel:${selectedLawyer.phone}`} className="text-blue-600 hover:text-blue-800 font-medium">
-                          {selectedLawyer.phone}
+                        <a 
+                          href={`tel:${selectedLawyer.phone}`} 
+                          className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium shadow-md hover:shadow-lg"
+                        >
+                          <Phone className="h-4 w-4" />
+                          <span>Call {selectedLawyer.phone}</span>
                         </a>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -264,14 +268,14 @@ function App() {
                   <div className="flex flex-col gap-4 justify-center">
                     <a
                       href={`tel:${selectedLawyer.phone}`}
-                      className="flex items-center justify-center space-x-3 bg-green-600 text-white px-6 py-4 rounded-xl hover:bg-green-700 transition-colors font-semibold text-base md:text-lg shadow-lg"
+                      className="flex items-center justify-center space-x-3 bg-green-600 text-white px-6 py-4 rounded-xl hover:bg-green-700 transition-all duration-200 font-semibold text-base md:text-lg shadow-lg hover:shadow-xl transform hover:scale-105"
                     >
                       <Phone className="h-6 w-6" />
-                      <span>{selectedLawyer.phone}</span>
+                      <span>Call {selectedLawyer.phone}</span>
                     </a>
                     <a
                       href={`mailto:${selectedLawyer.email}`}
-                      className="flex items-center justify-center space-x-3 bg-blue-600 text-white px-6 py-4 rounded-xl hover:bg-blue-700 transition-colors font-semibold text-base md:text-lg shadow-lg"
+                      className="flex items-center justify-center space-x-3 bg-blue-600 text-white px-6 py-4 rounded-xl hover:bg-blue-700 transition-all duration-200 font-semibold text-base md:text-lg shadow-lg hover:shadow-xl transform hover:scale-105"
                     >
                       <Mail className="h-6 w-6" />
                       <span>Send Email</span>
@@ -684,10 +688,10 @@ function App() {
                   <div className="flex items-center space-x-3">
                     <a
                       href={`tel:${lawyer.phone}`}
-                      className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium"
+                      className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium shadow-md hover:shadow-lg transform hover:scale-105"
                     >
                       <Phone className="h-4 w-4" />
-                      <span>{lawyer.phone}</span>
+                      <span>Call Now</span>
                     </a>
                     <a
                       href={`mailto:${lawyer.email}`}

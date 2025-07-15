@@ -504,6 +504,13 @@ export const BulkDataManager: React.FC<BulkDataManagerProps> = ({
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex space-x-2">
+                              <a
+                                href={`tel:${lawyer.phone}`}
+                                className="text-green-600 hover:text-green-900 p-1 rounded hover:bg-green-50"
+                                title="Call lawyer"
+                              >
+                                <Phone className="h-4 w-4" />
+                              </a>
                               <button className="text-blue-600 hover:text-blue-900">
                                 <Eye className="h-4 w-4" />
                               </button>
