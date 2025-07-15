@@ -9,7 +9,6 @@ export interface Lawyer {
   about: string;
   rating: number;
   reviews: number;
-  verified: boolean;
 }
 
 export interface PracticeArea {
