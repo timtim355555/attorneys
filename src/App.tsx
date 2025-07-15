@@ -9,7 +9,16 @@ const AvvoHeader = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <h1 className="text-2xl font-bold text-blue-600">Attorneys-deets</h1>
+              <a 
+                href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors cursor-pointer"
+              >
+                Attorneys-deets
+              </a>
             </div>
             <nav className="hidden md:ml-8 md:flex md:space-x-8">
               <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">Find a Lawyer</a>
@@ -484,7 +493,16 @@ function App() {
           <div className="border-t border-gray-700 mt-8 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="flex items-center mb-4 md:mb-0">
-                <h2 className="text-2xl font-bold text-blue-400 mr-8">Attorneys-deets</h2>
+                <a 
+                  href="#" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="text-2xl font-bold text-blue-400 hover:text-blue-300 transition-colors cursor-pointer mr-8"
+                >
+                  Attorneys-deets
+                </a>
                 <p className="text-gray-400 text-sm">
                   © 2024 Attorneys-deets. All rights reserved.
                 </p>
