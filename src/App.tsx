@@ -155,6 +155,7 @@ const AllStatesView = ({ setCurrentView }) => {
           onClick={() => {
             setCurrentView('home');
             window.history.pushState({}, '', '/');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           className="flex items-center text-blue-600 hover:text-blue-800 font-medium mb-4"
         >
@@ -242,6 +243,7 @@ const AllCitiesView = ({ setCurrentView }) => {
           onClick={() => {
             setCurrentView('home');
             window.history.pushState({}, '', '/');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           className="flex items-center text-blue-600 hover:text-blue-800 font-medium mb-4"
         >
@@ -323,6 +325,7 @@ const AllPracticeAreasView = ({ setCurrentView }) => {
           onClick={() => {
             setCurrentView('home');
             window.history.pushState({}, '', '/');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           className="flex items-center text-blue-600 hover:text-blue-800 font-medium mb-4"
         >
@@ -580,12 +583,16 @@ function App() {
       const path = window.location.pathname;
       if (path === '/all-states') {
         setCurrentView('all-states');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (path === '/all-cities') {
         setCurrentView('all-cities');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (path === '/all-practice-areas') {
         setCurrentView('all-practice-areas');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         setCurrentView('home');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     };
 
@@ -690,6 +697,7 @@ function App() {
                 onClick={() => {
                   setCurrentView('all-practice-areas');
                   window.history.pushState({}, '', '/all-practice-areas');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
@@ -751,6 +759,7 @@ function App() {
                 onClick={() => {
                   setCurrentView('all-states');
                   window.history.pushState({}, '', '/all-states');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
@@ -807,6 +816,7 @@ function App() {
                 onClick={() => {
                   setCurrentView('all-cities');
                   window.history.pushState({}, '', '/all-cities');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
