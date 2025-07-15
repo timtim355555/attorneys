@@ -247,12 +247,8 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPracticeArea, setSelectedPracticeArea] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
-  const [showAllLawyers, setShowAllLawyers] = useState(false);
-  const [showAddForm, setShowAddForm] = useState(false);
 
   // Filter lawyers based on search criteria
-  const isSearchActive = searchTerm || selectedPracticeArea || selectedLocation;
-  
   const filteredLawyers = lawyers.filter(lawyer => {
     const matchesSearch = lawyer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lawyer.bio.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -267,14 +263,10 @@ function App() {
     return matchesSearch && matchesPracticeArea && matchesLocation;
   });
 
-  // Determine which lawyers to display
-  const displayedLawyers = isSearchActive || showAllLawyers ? filteredLawyers : lawyers.slice(0, 3);
-
   const clearSearch = () => {
     setSearchTerm('');
     setSelectedPracticeArea('');
     setSelectedLocation('');
-    setShowAllLawyers(false);
   };
 
   const handleSearch = (e) => {
@@ -336,7 +328,7 @@ function App() {
                     <option key={location} value={location}>{location}</option>
                   ))}
                 </select>
-                {isSearchActive && (
+                {(searchTerm || selectedPracticeArea || selectedLocation) && (
                   <button
                     onClick={clearSearch}
                     className="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center space-x-2"
@@ -355,71 +347,39 @@ function App() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Results Header */}
         <div className="text-center mb-8">
-          {isSearchActive ? (
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              {filteredLawyers.length} Lawyers Found
-            </h2>
-          ) : showAllLawyers ? (
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              All {lawyers.length} Lawyers
-            </h2>
-          ) : (
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Featured Lawyers
-            </h2>
-          )}
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            {filteredLawyers.length} Lawyers Found
+          </h2>
         </div>
 
-        {displayedLawyers.length === 0 ? (
+        {filteredLawyers.length === 0 ? (
           <div className="text-center py-12">
             <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No lawyers found</h3>
-            <p className="text-gray-600 mb-6">Try adjusting your search criteria or browse all lawyers.</p>
+            <p className="text-gray-600 mb-6">Try adjusting your search criteria.</p>
             <button
-              onClick={() => {
-                clearSearch();
-                setShowAllLawyers(true);
-              }}
+              onClick={clearSearch}
               className="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition-colors"
             >
-              View All Lawyers
+              Clear Search
             </button>
           </div>
         ) : (
-          <>
-            {/* Lawyers Grid */}
-            <div className="grid md:grid-cols-3 gap-8 mb-8">
-              {displayedLawyers.map((lawyer, index) => (
-                <LawyerCard 
-                  key={lawyer.id} 
-                  lawyer={lawyer} 
-                  priority={index < 3} 
-                />
-              ))}
-            </div>
-
-            {/* View All Button */}
-            {!isSearchActive && !showAllLawyers && (
-              <div className="text-center">
-                <button
-                  onClick={() => setShowAllLawyers(true)}
-                  className="bg-blue-900 text-white px-8 py-3 rounded-lg hover:bg-blue-800 transition-colors font-medium flex items-center space-x-2 mx-auto"
-                >
-                  <Users className="h-5 w-5" />
-                  <span>View All {lawyers.length} Lawyers</span>
-                </button>
-              </div>
-            )}
-          </>
+          <div className="grid md:grid-cols-3 gap-8">
+            {filteredLawyers.map((lawyer, index) => (
+              <LawyerCard 
+                key={lawyer.id} 
+                lawyer={lawyer} 
+                priority={index < 3} 
+              />
+            ))}
+          </div>
         )}
       </div>
 
       {/* Add Lawyer Button */}
       <div className="fixed bottom-6 right-6">
-        <button
-          onClick={() => setShowAddForm(true)}
-          className="bg-blue-900 text-white p-4 rounded-full shadow-lg hover:bg-blue-800 transition-colors"
-        >
+        <button className="bg-blue-900 text-white p-4 rounded-full shadow-lg hover:bg-blue-800 transition-colors">
           <Plus className="h-6 w-6" />
         </button>
       </div>
