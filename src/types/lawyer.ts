@@ -9,6 +9,7 @@ export interface Lawyer {
   about: string;
   rating: number;
   reviews: number;
+  availability: 'Available' | 'Limited' | 'Busy';
 }
 
 export interface PracticeArea {
