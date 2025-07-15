@@ -564,66 +564,157 @@ function App() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar Filters */}
-          <div className="lg:w-1/4">
-            <AvvoFiltersSidebar 
-              selectedPracticeArea={selectedPracticeArea}
-              setSelectedPracticeArea={setSelectedPracticeArea}
-              practiceAreas={practiceAreas}
-              lawyers={lawyers}
-              filteredLawyers={filteredLawyers}
-            />
-          </div>
-
-          {/* Results */}
-          <div className="lg:w-3/4">
-            {/* Results Header */}
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  Lawyers {selectedLocation && `in ${selectedLocation}`}
-                </h2>
-                <p className="text-gray-600 mt-1">
-                  {filteredLawyers.length} lawyers found
-                </p>
-              </div>
-              
-              {/* Sort Options */}
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600">Sort by:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="rating">Highest Rated</option>
-                  <option value="reviews">Most Reviews</option>
-                  <option value="experience">Most Experience</option>
-                  <option value="name">Name A-Z</option>
-                </select>
-              </div>
+        {/* Avvo-style Directory Sections */}
+        <div className="space-y-12">
+          {/* Lawyers By Practice Area */}
+          <section className="bg-white rounded-lg border border-gray-200 p-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Lawyers By Practice Area</h2>
+              <p className="text-gray-600 text-lg">Find attorneys specializing in your legal issue</p>
             </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {[
+                { name: 'Personal Injury', count: '15,234', icon: '⚖️' },
+                { name: 'Criminal Defense', count: '12,456', icon: '🛡️' },
+                { name: 'Family Law', count: '18,789', icon: '👨‍👩‍👧‍👦' },
+                { name: 'DUI Defense', count: '8,567', icon: '🚗' },
+                { name: 'Business Law', count: '11,234', icon: '💼' },
+                { name: 'Real Estate', count: '9,876', icon: '🏠' },
+                { name: 'Immigration', count: '7,654', icon: '🌍' },
+                { name: 'Employment Law', count: '6,543', icon: '👔' },
+                { name: 'Bankruptcy', count: '5,432', icon: '💰' },
+                { name: 'Estate Planning', count: '8,765', icon: '📋' },
+                { name: 'Tax Law', count: '4,321', icon: '📊' },
+                { name: 'Medical Malpractice', count: '3,210', icon: '🏥' }
+              ].map((area, index) => (
+                <a
+                  key={index}
+                  href="#"
+                  className="group bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg p-4 transition-all duration-200"
+                >
+                  <div className="text-center">
+                    <div className="text-2xl mb-2">{area.icon}</div>
+                    <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 mb-1">
+                      {area.name}
+                    </h3>
+                    <p className="text-sm text-gray-600">{area.count} lawyers</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+            
+            <div className="text-center mt-8">
+              <a href="#" className="text-blue-600 hover:text-blue-800 font-medium">
+                View All Practice Areas →
+              </a>
+            </div>
+          </section>
 
-            {/* Lawyer Cards */}
-            {filteredLawyers.length === 0 ? (
-              <div className="text-center py-12">
-                <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No lawyers found</h3>
-                <p className="text-gray-600 mb-6">Try adjusting your search criteria.</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {filteredLawyers.map((lawyer, index) => (
-                  <AvvoLawyerCard 
-                    key={lawyer.id} 
-                    lawyer={lawyer} 
-                    priority={index < 3} 
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Lawyers By States */}
+          <section className="bg-white rounded-lg border border-gray-200 p-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Lawyers By States</h2>
+              <p className="text-gray-600 text-lg">Find qualified attorneys in your state</p>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {[
+                { name: 'California', count: '45,678', abbr: 'CA' },
+                { name: 'New York', count: '38,234', abbr: 'NY' },
+                { name: 'Texas', count: '32,567', abbr: 'TX' },
+                { name: 'Florida', count: '28,901', abbr: 'FL' },
+                { name: 'Illinois', count: '22,345', abbr: 'IL' },
+                { name: 'Pennsylvania', count: '19,876', abbr: 'PA' },
+                { name: 'Ohio', count: '17,654', abbr: 'OH' },
+                { name: 'Georgia', count: '16,432', abbr: 'GA' },
+                { name: 'North Carolina', count: '15,321', abbr: 'NC' },
+                { name: 'Michigan', count: '14,210', abbr: 'MI' },
+                { name: 'New Jersey', count: '13,987', abbr: 'NJ' },
+                { name: 'Virginia', count: '12,876', abbr: 'VA' },
+                { name: 'Washington', count: '11,765', abbr: 'WA' },
+                { name: 'Arizona', count: '10,654', abbr: 'AZ' },
+                { name: 'Massachusetts', count: '9,543', abbr: 'MA' },
+                { name: 'Tennessee', count: '8,432', abbr: 'TN' },
+                { name: 'Indiana', count: '7,321', abbr: 'IN' },
+                { name: 'Missouri', count: '6,210', abbr: 'MO' },
+                { name: 'Maryland', count: '5,987', abbr: 'MD' },
+                { name: 'Wisconsin', count: '4,876', abbr: 'WI' }
+              ].map((state, index) => (
+                <a
+                  key={index}
+                  href="#"
+                  className="group bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg p-3 transition-all duration-200"
+                >
+                  <div className="text-center">
+                    <div className="bg-blue-100 group-hover:bg-blue-200 text-blue-600 font-bold text-sm px-2 py-1 rounded mb-2 inline-block">
+                      {state.abbr}
+                    </div>
+                    <h3 className="font-medium text-gray-900 group-hover:text-blue-600 text-sm mb-1">
+                      {state.name}
+                    </h3>
+                    <p className="text-xs text-gray-600">{state.count} lawyers</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+            
+            <div className="text-center mt-8">
+              <a href="#" className="text-blue-600 hover:text-blue-800 font-medium">
+                View All States →
+              </a>
+            </div>
+          </section>
+
+          {/* Lawyers By Cities */}
+          <section className="bg-white rounded-lg border border-gray-200 p-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Lawyers By Cities</h2>
+              <p className="text-gray-600 text-lg">Connect with local attorneys in major cities</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { name: 'New York, NY', count: '12,345', population: '8.3M', icon: '🗽' },
+                { name: 'Los Angeles, CA', count: '9,876', population: '4.0M', icon: '🌴' },
+                { name: 'Chicago, IL', count: '7,654', population: '2.7M', icon: '🏙️' },
+                { name: 'Houston, TX', count: '6,543', population: '2.3M', icon: '🤠' },
+                { name: 'Phoenix, AZ', count: '5,432', population: '1.7M', icon: '🌵' },
+                { name: 'Philadelphia, PA', count: '4,321', population: '1.6M', icon: '🔔' },
+                { name: 'San Antonio, TX', count: '3,210', population: '1.5M', icon: '🏛️' },
+                { name: 'San Diego, CA', count: '2,987', population: '1.4M', icon: '🏖️' },
+                { name: 'Dallas, TX', count: '2,876', population: '1.3M', icon: '🏢' },
+                { name: 'San Jose, CA', count: '2,765', population: '1.0M', icon: '💻' },
+                { name: 'Austin, TX', count: '2,654', population: '965K', icon: '🎸' },
+                { name: 'Jacksonville, FL', count: '2,543', population: '911K', icon: '🏖️' }
+              ].map((city, index) => (
+                <a
+                  key={index}
+                  href="#"
+                  className="group bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg p-4 transition-all duration-200"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="text-2xl">{city.icon}</div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900 group-hover:text-blue-600">
+                        {city.name}
+                      </h3>
+                      <div className="flex justify-between items-center mt-1">
+                        <p className="text-sm text-gray-600">{city.count} lawyers</p>
+                        <p className="text-xs text-gray-500">{city.population}</p>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+            
+            <div className="text-center mt-8">
+              <a href="#" className="text-blue-600 hover:text-blue-800 font-medium">
+                View All Cities →
+              </a>
+            </div>
+          </section>
         </div>
       </div>
       
