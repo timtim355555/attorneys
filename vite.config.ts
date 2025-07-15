@@ -5,34 +5,31 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    exclude: ['lucide-react'],
-    include: ['react', 'react-dom']
+    include: ['react', 'react-dom', 'lucide-react']
   },
   build: {
     target: 'es2015',
-    minify: 'terser',
+    minify: 'esbuild', // Faster than terser
     sourcemap: false,
     cssCodeSplit: true,
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          icons: ['lucide-react'],
-          utils: ['xlsx', 'papaparse']
+          'react-vendor': ['react', 'react-dom'],
+          'ui-icons': ['lucide-react'],
+          'data-utils': ['xlsx', 'papaparse']
         }
-      }
-    },
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-        pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn']
       }
     }
   },
   server: {
+    port: 3000,
     hmr: {
       overlay: false
     }
+  },
+  esbuild: {
+    drop: ['console', 'debugger']
   }
 });

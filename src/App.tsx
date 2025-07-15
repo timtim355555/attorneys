@@ -4,65 +4,143 @@ import { Lawyer } from './types/lawyer';
 import { lawyers as initialLawyers, addLawyer } from './data/lawyers';
 import { SchemaMarkup } from './components/SchemaMarkup';
 import { SEOHead } from './components/SEOHead';
+import { LazyImage } from './components/LazyImage';
 
-// Preload critical images
-// Lazy load heavy components to reduce initial bundle size
+// Lazy load heavy components to reduce TBT
 const AddLawyerForm = React.lazy(() => import('./components/AddLawyerForm').then(module => ({ default: module.AddLawyerForm })));
 const ExcelImport = React.lazy(() => import('./components/ExcelImport').then(module => ({ default: module.ExcelImport })));
 const BulkDataManager = React.lazy(() => import('./components/BulkDataManager').then(module => ({ default: module.BulkDataManager })));
 const SitemapManager = React.lazy(() => import('./components/SitemapManager').then(module => ({ default: module.SitemapManager })));
 const GitHubSync = React.lazy(() => import('./components/GitHubSync').then(module => ({ default: module.GitHubSync })));
 
-const preloadImage = (src: string) => {
+// Critical image preloading for LCP
+const preloadCriticalImage = (src: string, priority: 'high' | 'low' = 'high') => {
   const link = document.createElement('link');
   link.rel = 'preload';
   link.as = 'image';
   link.href = src;
+  link.fetchPriority = priority;
   document.head.appendChild(link);
 };
 
-// Lazy loading component for images
-const LazyImage: React.FC<{
-  src: string;
-  alt: string;
-  className: string;
-  priority?: boolean;
-}> = ({ src, alt, className, priority = false }) => {
-  const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState(false);
+// Critical content component for faster LCP
+const CriticalHeroSection = React.memo(() => (
+  <div className="relative hero-bg text-white">
+    <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+    <div className="relative max-w-7xl mx-auto px-4 py-16 sm:py-24">
+      <div className="text-center">
+        <h1 className="hero-title">
+          Find the Right Lawyer<br />
+          <span className="text-yellow-400">For Your Case</span>
+        </h1>
+        <p className="hero-subtitle text-blue-100">
+          Connect with experienced attorneys in your area
+        </p>
+        
+        {/* Simplified search for faster LCP */}
+        <div className="max-w-4xl mx-auto search-container">
+          <div className="grid md:grid-cols-3 gap-4">
+            <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900">
+              <option value="">All Practice Areas</option>
+              <option value="Corporate Law">Corporate Law</option>
+              <option value="Criminal Defense">Criminal Defense</option>
+              <option value="Family Law">Family Law</option>
+              <option value="Personal Injury">Personal Injury</option>
+            </select>
+            
+            <input
+              type="text"
+              placeholder="Location..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+            />
+            
+            <button className="btn-primary w-full">
+              Search Lawyers
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+));
 
-  React.useEffect(() => {
-    if (priority) {
-      preloadImage(src);
-    }
-  }, [src, priority]);
-
+// Optimized lawyer card for better performance
+const LawyerCard = React.memo<{ lawyer: Lawyer; index: number; onClick: () => void }>(({ lawyer, index, onClick }) => {
+  const isCritical = index < 6; // First 6 cards are critical for LCP
+  
   return (
-    <div className={`${className} bg-gray-200 flex items-center justify-center`}>
-      {!loaded && !error && (
-        <div className="animate-pulse bg-gray-300 w-full h-full flex items-center justify-center">
-          <Users className="h-8 w-8 text-gray-400" />
+    <div 
+      className="lawyer-card cursor-pointer transform hover:-translate-y-1 transition-transform duration-200"
+      onClick={onClick}
+    >
+      <div className="relative h-48">
+        <LazyImage
+          src={lawyer.image} 
+          alt={lawyer.name}
+          className="lawyer-image"
+          priority={isCritical}
+          loading={isCritical ? 'eager' : 'lazy'}
+        />
+        <div className="absolute top-4 right-4 bg-white rounded-full px-3 py-1 shadow-lg">
+          <div className="flex items-center space-x-1">
+            <span className="text-yellow-400">★</span>
+            <span className="text-sm font-medium">{lawyer.rating}</span>
+          </div>
+          {lawyer.verified && (
+            <div className="absolute -top-2 -right-2 bg-green-500 rounded-full p-1">
+              <Shield className="h-3 w-3 text-white" />
+            </div>
+          )}
         </div>
-      )}
-      <img
-        src={src}
-        alt={alt}
-        className={`${className} transition-opacity duration-300 ${
-          loaded ? 'opacity-100' : 'opacity-0'
-        } ${error ? 'hidden' : ''}`}
-        onLoad={() => setLoaded(true)}
-        onError={() => setError(true)}
-        loading={priority ? 'eager' : 'lazy'}
-        decoding="async"
-      />
-      {error && (
-        <div className={`${className} bg-gray-100 flex items-center justify-center`}>
-          <Users className="h-8 w-8 text-gray-400" />
+      </div>
+      
+      <div className="p-6">
+        <h3 className="text-xl font-bold text-gray-900 mb-2">{lawyer.name}</h3>
+        <div className="flex items-center space-x-2 text-gray-600 mb-3">
+          <MapPin className="h-4 w-4" />
+          <span className="text-sm">{lawyer.location}</span>
+          <span className="text-sm">• {lawyer.experience} years</span>
+          {lawyer.availability && (
+            <span className={`text-xs px-2 py-1 rounded-full ${
+              lawyer.availability === 'Available' ? 'bg-green-100 text-green-800' :
+              lawyer.availability === 'Limited' ? 'bg-yellow-100 text-yellow-800' :
+              'bg-red-100 text-red-800'
+            }`}>
+              {lawyer.availability}
+            </span>
+          )}
         </div>
-      )}
+        
+        <div className="flex flex-wrap gap-2 mb-4">
+          {lawyer.practiceAreas.slice(0, 2).map((area, idx) => (
+            <span key={idx} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+              {area}
+            </span>
+          ))}
+          {lawyer.practiceAreas.length > 2 && (
+            <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
+              +{lawyer.practiceAreas.length - 2} more
+            </span>
+          )}
+        </div>
+        
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{lawyer.bio}</p>
+        
+        <div className="flex justify-between items-center">
+          <a
+            href={`tel:${lawyer.phone}`}
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-md hover:shadow-lg"
+          >
+            <Phone className="h-4 w-4" />
+            <span>{lawyer.phone}</span>
+          </a>
+          <span className="text-blue-900 font-medium hover:text-blue-700">View Profile →</span>
+        </div>
+      </div>
     </div>
   );
-};
+});
 
 const practiceAreas = [
   "Corporate Law", "Criminal Defense", "Family Law", "Personal Injury", 
@@ -86,7 +164,7 @@ const practiceAreas = [
 function App() {
   const [lawyers, setLawyers] = useState<Lawyer[]>(initialLawyers);
   const [filteredLawyers, setFilteredLawyers] = useState<Lawyer[]>(initialLawyers);
-  const [displayedLawyers, setDisplayedLawyers] = useState<Lawyer[]>(initialLawyers.slice(0, 12)); // Show only 12 initially
+  const [displayedLawyers, setDisplayedLawyers] = useState<Lawyer[]>(initialLawyers.slice(0, 6)); // Show only 6 initially for faster LCP
   const [selectedLawyer, setSelectedLawyer] = useState<Lawyer | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPracticeArea, setSelectedPracticeArea] = useState('');
@@ -100,26 +178,26 @@ function App() {
   const [showGitHubSync, setShowGitHubSync] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false); // Toggle this for admin features
 
-  // Virtual scrolling and pagination for better performance
+  // Optimized pagination for better LCP
   const [currentPage, setCurrentPage] = useState(1);
-  const lawyersPerPage = 12;
+  const lawyersPerPage = 6; // Reduced for faster initial load
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  // Preload only critical images for LCP optimization
+  // Critical image preloading for LCP
   React.useEffect(() => {
-    // Preload only first 3 images for desktop LCP
-    const criticalLawyers = lawyers.slice(0, 3);
+    // Preload first 6 images immediately for LCP
+    const criticalLawyers = lawyers.slice(0, 6);
     criticalLawyers.forEach((lawyer, index) => {
-      if (index < 3) { // Only first 3 for desktop
-        preloadImage(lawyer.image);
+      if (index < 6) {
+        preloadCriticalImage(lawyer.image, index < 3 ? 'high' : 'low');
       }
     });
-  }, []);
+  }, [lawyers]);
 
-  // Debounced search to reduce blocking time
+  // Debounced search to reduce TBT
   const [searchDebounceTimer, setSearchDebounceTimer] = useState<NodeJS.Timeout | null>(null);
 
-  const handleSearch = () => {
+  const handleSearch = React.useCallback(() => {
     let filtered = lawyers;
     
     if (searchTerm) {
@@ -144,7 +222,7 @@ function App() {
     setFilteredLawyers(filtered);
     setDisplayedLawyers(filtered.slice(0, lawyersPerPage));
     setCurrentPage(1);
-  };
+  }, [searchTerm, selectedPracticeArea, selectedLocation, lawyers, lawyersPerPage]);
 
   // Debounced search handler
   const handleDebouncedSearch = (term: string, practiceArea: string, location: string) => {
@@ -156,7 +234,7 @@ function App() {
       setSearchTerm(term);
       setSelectedPracticeArea(practiceArea);
       setSelectedLocation(location);
-    }, 300); // 300ms debounce
+    }, 150); // Reduced debounce for better UX
     
     setSearchDebounceTimer(timer);
   };
@@ -675,52 +753,7 @@ function App() {
       )}
 
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-blue-900 to-blue-700 text-white">
-        <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 py-24 sm:py-32">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Find the Right Lawyer<br />
-              <span className="text-yellow-400">For Your Case</span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-blue-100">
-              Connect with experienced attorneys in your area
-            </p>
-            
-            {/* Search Bar */}
-            <div className="max-w-4xl mx-auto bg-white rounded-2xl p-6 shadow-2xl">
-              <div className="grid md:grid-cols-3 gap-4">
-                
-                <select
-                  defaultValue={selectedPracticeArea}
-                  onChange={(e) => handleDebouncedSearch(searchTerm, e.target.value, selectedLocation)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                >
-                  <option value="">All Practice Areas</option>
-                  {practiceAreas.map(area => (
-                    <option key={area} value={area}>{area}</option>
-                  ))}
-                </select>
-                
-                <input
-                  type="text"
-                  placeholder="Location..."
-                  defaultValue={selectedLocation}
-                  onChange={(e) => handleDebouncedSearch(searchTerm, selectedPracticeArea, e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                />
-                
-                <button
-                  onClick={handleSearch}
-                  className="w-full bg-blue-900 text-white py-3 rounded-lg hover:bg-blue-800 transition-colors font-medium"
-                >
-                  Search Lawyers
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <CriticalHeroSection />
 
       {/* Filter Section */}
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -769,83 +802,17 @@ function App() {
         {/* Lawyer Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {displayedLawyers.map((lawyer, index) => (
-            <div 
-              key={lawyer.id} 
-              className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-1"
+            <LawyerCard
+              key={lawyer.id}
+              lawyer={lawyer}
+              index={index}
               onClick={() => {
                 setSelectedLawyer(lawyer);
-                // Update URL without page reload for SEO
                 const primaryPracticeArea = lawyer.practiceAreas[0];
                 const seoUrl = generateSEOUrl(lawyer, primaryPracticeArea);
                 window.history.pushState({}, '', seoUrl);
               }}
-            >
-              <div className="relative h-48">
-                <LazyImage
-                  src={lawyer.image} 
-                  alt={lawyer.name}
-                  className="w-full h-full object-cover"
-                  priority={index < 3} // Only first 3 for desktop LCP
-                />
-                <div className="absolute top-4 right-4 bg-white rounded-full px-3 py-1 shadow-lg">
-                  <div className="flex items-center space-x-1">
-                    <span className="text-yellow-400">★</span>
-                    <span className="text-sm font-medium">{lawyer.rating}</span>
-                  </div>
-                  {lawyer.verified && (
-                    <div className="absolute -top-2 -right-2 bg-green-500 rounded-full p-1">
-                      <Shield className="h-3 w-3 text-white" />
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{lawyer.name}</h3>
-                <div className="flex items-center space-x-2 text-gray-600 mb-3">
-                  <MapPin className="h-4 w-4" />
-                  <span className="text-sm">{lawyer.location}</span>
-                  <span className="text-sm">• {lawyer.experience} years</span>
-                  {lawyer.availability && (
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      lawyer.availability === 'Available' ? 'bg-green-100 text-green-800' :
-                      lawyer.availability === 'Limited' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {lawyer.availability}
-                    </span>
-                  )}
-                </div>
-                
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {lawyer.practiceAreas.slice(0, 2).map((area, index) => (
-                    <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
-                      {area}
-                    </span>
-                  ))}
-                  {lawyer.practiceAreas.length > 2 && (
-                    <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
-                      +{lawyer.practiceAreas.length - 2} more
-                    </span>
-                  )}
-                </div>
-                
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">{lawyer.bio}</p>
-                
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-3">
-                    <a
-                      href={`tel:${lawyer.phone}`}
-                      className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-md hover:shadow-lg"
-                    >
-                      <Phone className="h-4 w-4" />
-                      <span>{lawyer.phone}</span>
-                    </a>
-                  </div>
-                  <span className="text-blue-900 font-medium hover:text-blue-700">View Profile →</span>
-                </div>
-              </div>
-            </div>
+            />
           ))}
         </div>
 

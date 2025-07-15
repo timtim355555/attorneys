@@ -21,7 +21,7 @@ export const LazyImage: React.FC<LazyImageProps> = ({
    const [inView, setInView] = useState(priority);
    const imgRef = React.useRef<HTMLImageElement>(null);
 
-   // Intersection Observer for lazy loading
+   // Optimized Intersection Observer for lazy loading
    React.useEffect(() => {
      if (priority || inView) return;
     
@@ -34,7 +34,7 @@ export const LazyImage: React.FC<LazyImageProps> = ({
        },
        { 
          threshold: 0.1,
-         rootMargin: '50px' // Start loading 50px before entering viewport
+         rootMargin: priority ? '0px' : '100px' // Larger margin for non-critical images
        }
      );
     
@@ -45,14 +45,15 @@ export const LazyImage: React.FC<LazyImageProps> = ({
      return () => observer.disconnect();
    }, [priority, inView]);
 
+   // Critical image preloading
    React.useEffect(() => {
      if (priority) {
-       // Create link element for preloading
        const link = document.createElement('link');
        link.rel = 'preload';
        link.as = 'image';
        link.href = src;
        link.fetchPriority = 'high';
+       link.crossOrigin = 'anonymous';
        document.head.appendChild(link);
       
        return () => {
@@ -66,10 +67,10 @@ export const LazyImage: React.FC<LazyImageProps> = ({
    return (
      <div 
        ref={imgRef}
-       className={`${className} bg-gray-200 flex items-center justify-center relative overflow-hidden`}
+       className={`${className} relative overflow-hidden ${!loaded && !error ? 'skeleton' : 'bg-gray-200'}`}
      >
-       {!loaded && !error && (
-         <div className="animate-pulse bg-gray-300 w-full h-full flex items-center justify-center absolute inset-0">
+       {!loaded && !error && !priority && (
+         <div className="skeleton w-full h-full flex items-center justify-center absolute inset-0">
            <Users className="h-8 w-8 text-gray-400" />
          </div>
        )}
@@ -78,7 +79,7 @@ export const LazyImage: React.FC<LazyImageProps> = ({
          <img
            src={src}
            alt={alt}
-           className={`${className} transition-opacity duration-300 ${
+           className={`${className} transition-opacity duration-200 ${
              loaded ? 'opacity-100' : 'opacity-0'
            } ${error ? 'hidden' : ''}`}
            onLoad={() => setLoaded(true)}
@@ -86,6 +87,7 @@ export const LazyImage: React.FC<LazyImageProps> = ({
            loading={priority ? 'eager' : loading}
            decoding={priority ? 'sync' : 'async'}
            fetchPriority={priority ? 'high' : 'auto'}
+           crossOrigin="anonymous"
          />
        )}
       
