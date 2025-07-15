@@ -1,0 +1,65 @@
+{
+  "lawyers": [
+    {
+      "name": "John Smith",
+      "image": "https://images.pexels.com/photos/5668473/pexels-photo-5668473.jpeg",
+      "practiceAreas": ["Corporate Law", "Business Law"],
+      "experience": 15,
+      "location": "New York, NY",
+      "phone": "(212) 555-0101",
+      "email": "john.smith@smithlaw.com",
+      "rating": 4.9,
+      "reviews": 127,
+      "education": "Columbia Law School, JD",
+      "bio": "Senior partner at Smith & Associates with over 15 years of experience in corporate law and business transactions.",
+      "specializations": ["Mergers & Acquisitions", "Securities Law", "Corporate Governance"],
+      "website": "https://smithlaw.com",
+      "barNumber": "NY123456",
+      "languages": ["English", "Spanish"],
+      "hourlyRate": "$650-850",
+      "availability": "Available",
+      "verified": true
+    }
+  ],
+  "lastUpdated": "2024-12-19T00:00:00.000Z",
+  "totalCount": 1,
+  "instructions": {
+    "howToAdd": "Add new lawyer objects to the 'lawyers' array following the same structure",
+    "requiredFields": [
+      "name",
+      "email", 
+      "practiceAreas",
+      "location",
+      "phone",
+      "education",
+      "bio"
+    ],
+    "optionalFields": [
+      "image",
+      "website",
+      "barNumber", 
+      "languages",
+      "hourlyRate",
+      "availability",
+      "verified",
+      "specializations",
+      "rating",
+      "reviews"
+    ],
+    "practiceAreaOptions": [
+      "Corporate Law",
+      "Criminal Defense", 
+      "Family Law",
+      "Personal Injury",
+      "Real Estate Law",
+      "Immigration Law",
+      "Tax Law",
+      "Employment Law",
+      "Intellectual Property",
+      "Estate Planning",
+      "Bankruptcy Law",
+      "Environmental Law"
+    ],
+    "availabilityOptions": ["Available", "Limited", "Busy"]
+  }
+}

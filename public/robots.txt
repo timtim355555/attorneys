@@ -1,0 +1,52 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://precious-sherbet-ca08de.netlify.app/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# Allow all important pages
+Allow: /lawyer/
+Allow: /practice-area/
+Allow: /lawyers-in/
+Allow: /best-attorney-for-*
+
+# Disallow admin and API areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /*?*
+Disallow: /bulk-manager
+Disallow: /sitemap-manager
+
+# Allow CSS, JS, and images for better rendering
+Allow: /static/
+Allow: /*.css
+Allow: /*.js
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.gif
+Allow: /*.svg
+Allow: /*.ico
+
+# Specific crawling instructions for legal content
+Allow: /about-us
+Allow: /contact-us
+Allow: /privacy-policy
+Allow: /terms-conditions
+Allow: /disclaimer
+
+# Enhanced crawling for lawyer profiles
+Allow: /best-attorney-for-corporate-law-*
+Allow: /best-attorney-for-criminal-defense-*
+Allow: /best-attorney-for-family-law-*
+Allow: /best-attorney-for-personal-injury-*
+Allow: /best-attorney-for-real-estate-law-*
+Allow: /best-attorney-for-immigration-law-*
+Allow: /best-attorney-for-tax-law-*
+Allow: /best-attorney-for-employment-law-*
+Allow: /best-attorney-for-intellectual-property-*
+Allow: /best-attorney-for-estate-planning-*

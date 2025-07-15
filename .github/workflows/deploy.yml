@@ -1,0 +1,62 @@
+name: Auto Deploy to Live Website
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 🚀 Starting Deployment
+      run: echo "🚀 Starting deployment to live website..."
+      
+    - name: 📥 Checkout code
+      uses: actions/checkout@v3
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: 📦 Install dependencies
+      run: npm ci
+      
+    - name: 🏗️ Build project
+      run: npm run build
+      
+    - name: 🚀 Deploy to VPS
+      uses: appleboy/ssh-action@v0.1.8
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        password: ${{ secrets.VPS_PASSWORD }}
+        port: ${{ secrets.VPS_PORT }}
+        script: |
+          echo "🔄 Pulling latest changes..."
+          cd /var/www/html/your-domain
+          git pull origin main
+          
+          echo "📦 Installing dependencies..."
+          npm install --production
+          
+          echo "🏗️ Building project..."
+          npm run build
+          
+          echo "📁 Copying files..."
+          sudo cp -r dist/* /var/www/html/your-domain/
+          
+          echo "🔧 Setting permissions..."
+          sudo chown -R www-data:www-data /var/www/html/your-domain/
+          sudo chmod -R 755 /var/www/html/your-domain/
+          
+          echo "🔄 Reloading Nginx..."
+          sudo systemctl reload nginx
+          
+          echo "✅ Deployment completed successfully!"
+          echo "🌐 Your website is now live with the latest changes!"
+          
+    - name: ✅ Deployment Success
+      run: echo "✅ Website updated successfully at https://your-domain.com"
