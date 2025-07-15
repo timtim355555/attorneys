@@ -34,7 +34,7 @@ export const LazyImage: React.FC<LazyImageProps> = ({
        },
        { 
          threshold: 0.1,
-         rootMargin: priority ? '0px' : '100px' // Larger margin for non-critical images
+         rootMargin: priority ? '0px' : '50px' // Reduced margin for faster loading
        }
      );
     

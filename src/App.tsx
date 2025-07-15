@@ -66,7 +66,7 @@ const CriticalHeroSection = React.memo(() => (
 
 // Optimized lawyer card for better performance
 const LawyerCard = React.memo<{ lawyer: Lawyer; index: number; onClick: () => void }>(({ lawyer, index, onClick }) => {
-  const isCritical = index < 6; // First 6 cards are critical for LCP
+  const isCritical = index < 3; // Only first 3 cards are critical for LCP
   
   return (
     <div 
@@ -164,7 +164,7 @@ const practiceAreas = [
 function App() {
   const [lawyers, setLawyers] = useState<Lawyer[]>(initialLawyers);
   const [filteredLawyers, setFilteredLawyers] = useState<Lawyer[]>(initialLawyers);
-  const [displayedLawyers, setDisplayedLawyers] = useState<Lawyer[]>(initialLawyers.slice(0, 6)); // Show only 6 initially for faster LCP
+  const [displayedLawyers, setDisplayedLawyers] = useState<Lawyer[]>(initialLawyers.slice(0, 3)); // Show only 3 featured lawyers for optimal LCP
   const [selectedLawyer, setSelectedLawyer] = useState<Lawyer | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPracticeArea, setSelectedPracticeArea] = useState('');
@@ -180,15 +180,15 @@ function App() {
 
   // Optimized pagination for better LCP
   const [currentPage, setCurrentPage] = useState(1);
-  const lawyersPerPage = 6; // Reduced for faster initial load
+  const lawyersPerPage = 3; // Only 3 featured lawyers for optimal LCP
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   // Critical image preloading for LCP
   React.useEffect(() => {
-    // Preload first 6 images immediately for LCP
-    const criticalLawyers = lawyers.slice(0, 6);
+    // Preload only first 3 images for optimal LCP
+    const criticalLawyers = lawyers.slice(0, 3);
     criticalLawyers.forEach((lawyer, index) => {
-      if (index < 6) {
+      if (index < 3) {
         preloadCriticalImage(lawyer.image, index < 3 ? 'high' : 'low');
       }
     });
@@ -759,7 +759,10 @@ function App() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900">
-            {filteredLawyers.length} Lawyers Found {displayedLawyers.length < filteredLawyers.length && `(Showing ${displayedLawyers.length})`}
+            {searchTerm || selectedPracticeArea || selectedLocation ? 
+              `${filteredLawyers.length} Lawyers Found ${displayedLawyers.length < filteredLawyers.length ? `(Showing ${displayedLawyers.length})` : ''}` :
+              'Featured Lawyers'
+            }
           </h2>
           <div className="flex items-center space-x-4">
             {isAdmin && (
@@ -800,7 +803,7 @@ function App() {
         </div>
 
         {/* Lawyer Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-8">
           {displayedLawyers.map((lawyer, index) => (
             <LawyerCard
               key={lawyer.id}
@@ -827,15 +830,15 @@ function App() {
             ) : (
               <button
                 onClick={loadMoreLawyers}
-                className="bg-blue-900 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition-colors"
+                className="bg-blue-900 text-white px-8 py-4 rounded-xl hover:bg-blue-800 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                Load More Lawyers ({filteredLawyers.length - displayedLawyers.length} remaining)
+                View All {filteredLawyers.length} Lawyers
               </button>
             )}
           </div>
         )}
 
-        {filteredLawyers.length === 0 && displayedLawyers.length === 0 && (
+        {filteredLawyers.length === 0 && displayedLawyers.length === 0 && (searchTerm || selectedPracticeArea || selectedLocation) && (
           <div className="text-center py-12">
             <div className="text-gray-400 mb-4">
               <Scale className="h-16 w-16 mx-auto" />
