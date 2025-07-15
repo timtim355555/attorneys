@@ -91,50 +91,19 @@ const AvvoLawyerCard = ({ lawyer, priority = false }) => {
     <div className="bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow duration-200">
       <div className="p-6">
         {/* Header with photo and basic info */}
-        <div className="flex items-start space-x-4 mb-4">
-          <img
-            src={lawyer.image}
-            alt={lawyer.name}
-            className="w-20 h-20 rounded-lg object-cover border border-gray-200"
-            loading={priority ? "eager" : "lazy"}
-          />
-          <div className="flex-1 min-w-0">
+        <div className="mb-4">
+          <div className="flex-1">
             <h3 className="text-xl font-semibold text-gray-900 mb-1">{lawyer.name}</h3>
-            <p className="text-gray-600 mb-2">{lawyer.practiceAreas[0]} Attorney</p>
-            
-            {/* Avvo Rating Style */}
-            <div className="flex items-center space-x-4 mb-2">
-              <div className="flex items-center">
-                <div className="bg-green-500 text-white px-2 py-1 rounded text-sm font-bold mr-2">
-                  {lawyer.rating.toFixed(1)}
-                </div>
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-4 w-4 ${
-                        i < Math.floor(lawyer.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                      }`}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm text-gray-600 ml-2">({lawyer.reviews})</span>
-              </div>
-              {lawyer.verified && (
-                <div className="flex items-center text-green-600">
-                  <Shield className="h-4 w-4 mr-1" />
-                  <span className="text-sm font-medium">Verified</span>
-                </div>
-              )}
-            </div>
+            <p className="text-gray-600 mb-3">{lawyer.practiceAreas.join(', ')} Attorney</p>
             
             <div className="flex items-center text-sm text-gray-600 mb-2">
               <MapPin className="h-4 w-4 mr-1" />
               {lawyer.location}
             </div>
             
-            <div className="text-sm text-gray-600">
-              {lawyer.experience} years experience
+            <div className="flex items-center text-sm text-gray-600 mb-2">
+              <Award className="h-4 w-4 mr-1" />
+              {lawyer.college}
             </div>
           </div>
         </div>
@@ -142,7 +111,7 @@ const AvvoLawyerCard = ({ lawyer, priority = false }) => {
         {/* Practice Areas */}
         <div className="mb-4">
           <div className="flex flex-wrap gap-2">
-            {lawyer.practiceAreas.slice(0, 3).map((area, index) => (
+            {lawyer.practiceAreas.map((area, index) => (
               <span
                 key={index}
                 className="inline-block bg-blue-50 text-blue-700 text-sm px-3 py-1 rounded-full"
@@ -150,17 +119,12 @@ const AvvoLawyerCard = ({ lawyer, priority = false }) => {
                 {area}
               </span>
             ))}
-            {lawyer.practiceAreas.length > 3 && (
-              <span className="inline-block bg-gray-100 text-gray-600 text-sm px-3 py-1 rounded-full">
-                +{lawyer.practiceAreas.length - 3} more
-              </span>
-            )}
           </div>
         </div>
 
-        {/* Bio snippet */}
+        {/* About section */}
         <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-          {lawyer.bio}
+          {lawyer.about}
         </p>
 
         {/* Contact Info */}
@@ -171,14 +135,12 @@ const AvvoLawyerCard = ({ lawyer, priority = false }) => {
               {lawyer.phone}
             </a>
           </div>
-          {lawyer.website && (
-            <div className="flex items-center text-sm text-gray-600">
-              <span className="h-4 w-4 mr-2" />
-              <a href={lawyer.website} className="hover:text-blue-600" target="_blank" rel="noopener noreferrer">
-                View Website
-              </a>
-            </div>
-          )}
+          <div className="flex items-center text-sm text-gray-600">
+            <Mail className="h-4 w-4 mr-2 text-blue-500" />
+            <a href={`mailto:${lawyer.email}`} className="hover:text-blue-600">
+              {lawyer.email}
+            </a>
+          </div>
         </div>
 
         {/* Avvo-style Action Buttons */}
