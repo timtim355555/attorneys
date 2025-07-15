@@ -506,7 +506,7 @@ export const BulkDataManager: React.FC<BulkDataManagerProps> = ({
                             <div className="flex space-x-2">
                               <a
                                 href={`tel:${lawyer.phone}`}
-                                className="text-green-600 hover:text-green-900 p-1 rounded hover:bg-green-50"
+                                className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-50"
                                 title="Call lawyer"
                               >
                                 <Phone className="h-4 w-4" />
