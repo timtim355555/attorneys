@@ -693,13 +693,6 @@ function App() {
                       <Phone className="h-4 w-4" />
                       <span>{lawyer.phone}</span>
                     </a>
-                    <a
-                      href={`mailto:${lawyer.email}`}
-                      className="hidden md:flex items-center space-x-2 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      <Mail className="h-4 w-4" />
-                      <span>Email</span>
-                    </a>
                   </div>
                   <span className="text-blue-900 font-medium hover:text-blue-700">View Profile →</span>
                 </div>
