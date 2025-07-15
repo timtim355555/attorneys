@@ -691,7 +691,7 @@ function App() {
                       className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium shadow-md hover:shadow-lg transform hover:scale-105"
                     >
                       <Phone className="h-4 w-4" />
-                      <span>Call Now</span>
+                      <span>{lawyer.phone}</span>
                     </a>
                     <a
                       href={`mailto:${lawyer.email}`}
