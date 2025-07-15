@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import { Search, Phone, Mail, MapPin, Scale, Users, Award, Filter, Menu, X, Plus, Shield, FileSpreadsheet, Database, Globe, Github } from 'lucide-react';
 import { Lawyer } from './types/lawyer';
 import { lawyers as initialLawyers, addLawyer } from './data/lawyers';
-import { AddLawyerForm } from './components/AddLawyerForm';
-import { ExcelImport } from './components/ExcelImport';
-import { BulkDataManager } from './components/BulkDataManager';
-import { SitemapManager } from './components/SitemapManager';
-import { GitHubSync } from './components/GitHubSync';
 import { SchemaMarkup } from './components/SchemaMarkup';
 import { SEOHead } from './components/SEOHead';
 
 // Preload critical images
+// Lazy load heavy components to reduce initial bundle size
+const AddLawyerForm = React.lazy(() => import('./components/AddLawyerForm').then(module => ({ default: module.AddLawyerForm })));
+const ExcelImport = React.lazy(() => import('./components/ExcelImport').then(module => ({ default: module.ExcelImport })));
+const BulkDataManager = React.lazy(() => import('./components/BulkDataManager').then(module => ({ default: module.BulkDataManager })));
+const SitemapManager = React.lazy(() => import('./components/SitemapManager').then(module => ({ default: module.SitemapManager })));
+const GitHubSync = React.lazy(() => import('./components/GitHubSync').then(module => ({ default: module.GitHubSync })));
+
 const preloadImage = (src: string) => {
   const link = document.createElement('link');
   link.rel = 'preload';
@@ -84,6 +86,7 @@ const practiceAreas = [
 function App() {
   const [lawyers, setLawyers] = useState<Lawyer[]>(initialLawyers);
   const [filteredLawyers, setFilteredLawyers] = useState<Lawyer[]>(initialLawyers);
+  const [displayedLawyers, setDisplayedLawyers] = useState<Lawyer[]>(initialLawyers.slice(0, 12)); // Show only 12 initially
   const [selectedLawyer, setSelectedLawyer] = useState<Lawyer | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPracticeArea, setSelectedPracticeArea] = useState('');
@@ -97,13 +100,24 @@ function App() {
   const [showGitHubSync, setShowGitHubSync] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false); // Toggle this for admin features
 
-  // Preload first few lawyer images for better LCP
+  // Virtual scrolling and pagination for better performance
+  const [currentPage, setCurrentPage] = useState(1);
+  const lawyersPerPage = 12;
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  // Preload only critical images for LCP optimization
   React.useEffect(() => {
-    const firstFewLawyers = lawyers.slice(0, 6);
-    firstFewLawyers.forEach(lawyer => {
-      preloadImage(lawyer.image);
+    // Preload only first 3 images for desktop LCP
+    const criticalLawyers = lawyers.slice(0, 3);
+    criticalLawyers.forEach((lawyer, index) => {
+      if (index < 3) { // Only first 3 for desktop
+        preloadImage(lawyer.image);
+      }
     });
   }, []);
+
+  // Debounced search to reduce blocking time
+  const [searchDebounceTimer, setSearchDebounceTimer] = useState<NodeJS.Timeout | null>(null);
 
   const handleSearch = () => {
     let filtered = lawyers;
@@ -128,18 +142,79 @@ function App() {
     }
     
     setFilteredLawyers(filtered);
+    setDisplayedLawyers(filtered.slice(0, lawyersPerPage));
+    setCurrentPage(1);
   };
+
+  // Debounced search handler
+  const handleDebouncedSearch = (term: string, practiceArea: string, location: string) => {
+    if (searchDebounceTimer) {
+      clearTimeout(searchDebounceTimer);
+    }
+    
+    const timer = setTimeout(() => {
+      setSearchTerm(term);
+      setSelectedPracticeArea(practiceArea);
+      setSelectedLocation(location);
+    }, 300); // 300ms debounce
+    
+    setSearchDebounceTimer(timer);
+  };
+
+  // Load more lawyers (pagination)
+  const loadMoreLawyers = React.useCallback(() => {
+    if (isLoadingMore) return;
+    
+    setIsLoadingMore(true);
+    
+    // Simulate async loading to prevent blocking
+    setTimeout(() => {
+      const nextPage = currentPage + 1;
+      const startIndex = (nextPage - 1) * lawyersPerPage;
+      const endIndex = startIndex + lawyersPerPage;
+      const newLawyers = filteredLawyers.slice(startIndex, endIndex);
+      
+      if (newLawyers.length > 0) {
+        setDisplayedLawyers(prev => [...prev, ...newLawyers]);
+        setCurrentPage(nextPage);
+      }
+      
+      setIsLoadingMore(false);
+    }, 100);
+  }, [currentPage, filteredLawyers, isLoadingMore]);
+
+  // Intersection observer for infinite scroll
+  const loadMoreRef = React.useRef<HTMLDivElement>(null);
+  
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && displayedLawyers.length < filteredLawyers.length) {
+          loadMoreLawyers();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+    
+    return () => observer.disconnect();
+  }, [loadMoreLawyers, displayedLawyers.length, filteredLawyers.length]);
 
   const handleAddLawyer = (newLawyerData: Omit<Lawyer, 'id'>) => {
     const newLawyer = addLawyer(newLawyerData);
     setLawyers([...lawyers, newLawyer]);
     setFilteredLawyers([...filteredLawyers, newLawyer]);
+    setDisplayedLawyers([...displayedLawyers, newLawyer]);
   };
 
   const handleImportLawyers = (newLawyers: Omit<Lawyer, 'id'>[]) => {
     const importedLawyers = newLawyers.map(lawyerData => addLawyer(lawyerData));
     setLawyers([...lawyers, ...importedLawyers]);
     setFilteredLawyers([...filteredLawyers, ...importedLawyers]);
+    setDisplayedLawyers([...displayedLawyers, ...importedLawyers.slice(0, lawyersPerPage)]);
   };
 
   const handleUpdateLawyer = (id: number, updates: Partial<Lawyer>) => {
@@ -160,12 +235,19 @@ function App() {
       }
       return true;
     }));
+    
+    // Update displayed lawyers
+    const updatedDisplayed = displayedLawyers.map(lawyer => 
+      lawyer.id === id ? { ...lawyer, ...updates } : lawyer
+    );
+    setDisplayedLawyers(updatedDisplayed);
   };
 
   const handleDeleteLawyer = (id: number) => {
     const updatedLawyers = lawyers.filter(lawyer => lawyer.id !== id);
     setLawyers(updatedLawyers);
     setFilteredLawyers(filteredLawyers.filter(lawyer => lawyer.id !== id));
+    setDisplayedLawyers(displayedLawyers.filter(lawyer => lawyer.id !== id));
   };
 
   const generateSEOUrl = (lawyer: Lawyer, practiceArea: string) => {
@@ -187,9 +269,19 @@ function App() {
   const generateSEOTitle = (lawyer: Lawyer, practiceArea: string) => {
     return `Best Attorney for ${practiceArea} in ${lawyer.location} 2025`;
   };
+  
   React.useEffect(() => {
     handleSearch();
   }, [searchTerm, selectedPracticeArea, selectedLocation]);
+
+  // Cleanup debounce timer
+  React.useEffect(() => {
+    return () => {
+      if (searchDebounceTimer) {
+        clearTimeout(searchDebounceTimer);
+      }
+    };
+  }, [searchDebounceTimer]);
 
   if (selectedLawyer) {
     const primaryPracticeArea = selectedLawyer.practiceAreas[0];
@@ -600,8 +692,8 @@ function App() {
               <div className="grid md:grid-cols-3 gap-4">
                 
                 <select
-                  value={selectedPracticeArea}
-                  onChange={(e) => setSelectedPracticeArea(e.target.value)}
+                  defaultValue={selectedPracticeArea}
+                  onChange={(e) => handleDebouncedSearch(searchTerm, e.target.value, selectedLocation)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 >
                   <option value="">All Practice Areas</option>
@@ -613,8 +705,8 @@ function App() {
                 <input
                   type="text"
                   placeholder="Location..."
-                  value={selectedLocation}
-                  onChange={(e) => setSelectedLocation(e.target.value)}
+                  defaultValue={selectedLocation}
+                  onChange={(e) => handleDebouncedSearch(searchTerm, selectedPracticeArea, e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 />
                 
@@ -634,7 +726,7 @@ function App() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900">
-            {filteredLawyers.length} Lawyers Found
+            {filteredLawyers.length} Lawyers Found {displayedLawyers.length < filteredLawyers.length && `(Showing ${displayedLawyers.length})`}
           </h2>
           <div className="flex items-center space-x-4">
             {isAdmin && (
@@ -676,7 +768,7 @@ function App() {
 
         {/* Lawyer Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredLawyers.map((lawyer, index) => (
+          {displayedLawyers.map((lawyer, index) => (
             <div 
               key={lawyer.id} 
               className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-1"
@@ -693,7 +785,7 @@ function App() {
                   src={lawyer.image} 
                   alt={lawyer.name}
                   className="w-full h-full object-cover"
-                  priority={index < 6}
+                  priority={index < 3} // Only first 3 for desktop LCP
                 />
                 <div className="absolute top-4 right-4 bg-white rounded-full px-3 py-1 shadow-lg">
                   <div className="flex items-center space-x-1">
@@ -757,7 +849,26 @@ function App() {
           ))}
         </div>
 
-        {filteredLawyers.length === 0 && (
+        {/* Load More Trigger */}
+        {displayedLawyers.length < filteredLawyers.length && (
+          <div ref={loadMoreRef} className="text-center py-8">
+            {isLoadingMore ? (
+              <div className="flex items-center justify-center space-x-2">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-900"></div>
+                <span className="text-gray-600">Loading more lawyers...</span>
+              </div>
+            ) : (
+              <button
+                onClick={loadMoreLawyers}
+                className="bg-blue-900 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition-colors"
+              >
+                Load More Lawyers ({filteredLawyers.length - displayedLawyers.length} remaining)
+              </button>
+            )}
+          </div>
+        )}
+
+        {filteredLawyers.length === 0 && displayedLawyers.length === 0 && (
           <div className="text-center py-12">
             <div className="text-gray-400 mb-4">
               <Scale className="h-16 w-16 mx-auto" />
@@ -829,48 +940,58 @@ function App() {
       </footer>
 
       {/* Add Lawyer Form Modal */}
-      {showAddForm && (
-        <AddLawyerForm
-          onAddLawyer={handleAddLawyer}
-          onClose={() => setShowAddForm(false)}
-        />
-      )}
+      <React.Suspense fallback={<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div></div>}>
+        {showAddForm && (
+          <AddLawyerForm
+            onAddLawyer={handleAddLawyer}
+            onClose={() => setShowAddForm(false)}
+          />
+        )}
+      </React.Suspense>
 
       {/* Excel Import Modal */}
-      {showImportForm && (
-        <ExcelImport
-          onImportLawyers={handleImportLawyers}
-          onClose={() => setShowImportForm(false)}
-        />
-      )}
+      <React.Suspense fallback={<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div></div>}>
+        {showImportForm && (
+          <ExcelImport
+            onImportLawyers={handleImportLawyers}
+            onClose={() => setShowImportForm(false)}
+          />
+        )}
+      </React.Suspense>
 
       {/* Bulk Data Manager Modal */}
-      {showBulkManager && (
-        <BulkDataManager
-          lawyers={lawyers}
-          onImportLawyers={handleImportLawyers}
-          onUpdateLawyer={handleUpdateLawyer}
-          onDeleteLawyer={handleDeleteLawyer}
-          onClose={() => setShowBulkManager(false)}
-        />
-      )}
+      <React.Suspense fallback={<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div></div>}>
+        {showBulkManager && (
+          <BulkDataManager
+            lawyers={lawyers}
+            onImportLawyers={handleImportLawyers}
+            onUpdateLawyer={handleUpdateLawyer}
+            onDeleteLawyer={handleDeleteLawyer}
+            onClose={() => setShowBulkManager(false)}
+          />
+        )}
+      </React.Suspense>
 
       {/* Sitemap Manager Modal */}
-      {showSitemapManager && (
-        <SitemapManager
-          lawyers={lawyers}
-          onClose={() => setShowSitemapManager(false)}
-        />
-      )}
+      <React.Suspense fallback={<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div></div>}>
+        {showSitemapManager && (
+          <SitemapManager
+            lawyers={lawyers}
+            onClose={() => setShowSitemapManager(false)}
+          />
+        )}
+      </React.Suspense>
 
       {/* GitHub Sync Modal */}
-      {showGitHubSync && (
-        <GitHubSync
-          lawyers={lawyers}
-          onSyncFromGitHub={handleImportLawyers}
-          onClose={() => setShowGitHubSync(false)}
-        />
-      )}
+      <React.Suspense fallback={<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div></div>}>
+        {showGitHubSync && (
+          <GitHubSync
+            lawyers={lawyers}
+            onSyncFromGitHub={handleImportLawyers}
+            onClose={() => setShowGitHubSync(false)}
+          />
+        )}
+      </React.Suspense>
     </div>
   );
 }
