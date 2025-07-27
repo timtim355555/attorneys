@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, MapPin, Star, Phone, Mail, Globe, User, Filter, ChevronDown, Award, Clock, Shield, Users, Map, ArrowRight, CheckCircle, Scale, Gavel, BookOpen, Zap, TrendingUp, Target, Sparkles, ChevronRight, Play, Car, Home, Building, Briefcase, Heart, Plane, DollarSign, UserCheck, Lightbulb, FileText, TreePine, Stethoscope, GraduationCap, Hammer, Baby, Truck, Landmark, Mountain } from 'lucide-react';
+import { Search, MapPin, Star, Phone, Mail, Globe, User, Filter, ChevronDown, Award, Clock, Shield, Users, Map, ArrowRight, CheckCircle, Scale, Gavel, BookOpen, Zap, TrendingUp, Target, Sparkles, ChevronRight, Play, Car, Home, Building, Briefcase, Heart, Plane, DollarSign, UserCheck, Lightbulb, FileText, TreePine, Stethoscope, GraduationCap, Hammer, Baby, Truck, Landmark, Mountain, Lock, Anchor } from 'lucide-react';
 import { lawyers } from './data/lawyers';
 import { Lawyer } from './types/lawyer';
 import { LazyImage } from './components/LazyImage';
@@ -198,7 +198,7 @@ function App() {
     'Education Law': GraduationCap,
     'Aviation Law': Plane,
     'Entertainment Law': Star,
-    'Workers\' Compensation': Truck,
+    'Workers Compensation': Truck,
     'Social Security Disability': UserCheck,
     'Military Law': Award,
     'Consumer Protection': Shield,
@@ -214,7 +214,12 @@ function App() {
     'Gaming Law': Star,
     'Business Law': Briefcase,
     'DUI/DWI': Car,
-    'Medical Malpractice': Stethoscope
+    'Medical Malpractice': Stethoscope,
+    'Divorce': Heart,
+    'Wills and Trusts': FileText,
+    'Patent Law': Lightbulb,
+    'Contract Law': FileText,
+    'Litigation': Scale
   };
 
   // State icons mapping (using geographic/cultural associations)
@@ -268,7 +273,7 @@ function App() {
     'ND': TreePine, // Peace Garden
     'AK': Mountain, // Last frontier
     'VT': Mountain, // Green Mountains
-    'WY': Mountain, // Equality state
+    'WY': Mountain // Equality state
   };
 
   // City icons mapping (using city characteristics)
@@ -322,7 +327,7 @@ function App() {
     'Tulsa': Landmark, // Oil
     'Arlington': Users, // Sports
     'Tampa': TreePine, // Beaches
-    'New Orleans': Star, // Jazz
+    'New Orleans': Star // Jazz
   };
   const LawyerCard = ({ lawyer }: { lawyer: Lawyer }) => (
     <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
