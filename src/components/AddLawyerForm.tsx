@@ -16,7 +16,32 @@ const practiceAreaOptions = [
   "Securities Law", "Construction Law", "Elder Law", "Insurance Law",
   "Education Law", "Aviation Law", "Entertainment Law", "Military Law",
   "Consumer Protection", "Civil Rights", "Nonprofit Law", "Energy Law",
-  "Privacy Law", "Maritime Law", "Cybersecurity Law"
+  "Privacy Law", "Maritime Law", "Cybersecurity Law", "Admiralty Law",
+  "Administrative Law", "Adoption Law", "Agricultural Law", "Animal Law",
+  "Antitrust Law", "Appellate Law", "Art Law", "Asbestos Litigation",
+  "Asset Protection", "Automotive Law", "Banking Law", "Biotech Law",
+  "Cannabis Law", "Class Action Law", "Commercial Law", "Communications Law",
+  "Compliance Law", "Computer Law", "Constitutional Law", "Contract Law",
+  "Copyright Law", "Creditors Rights", "Cryptocurrency Law", "Customs Law",
+  "Data Privacy Law", "Defamation Law", "Disability Law", "Discrimination Law",
+  "Divorce Law", "Drug Crimes", "E-Commerce Law", "Election Law",
+  "Eminent Domain", "ERISA Law", "Ethics Law", "Expungement",
+  "FDA Law", "Foreclosure Defense", "Franchise Law", "Gaming Law",
+  "Government Contracts", "Guardianship Law", "Gun Rights", "Hate Crimes",
+  "Health Law", "HOA Law", "Human Rights", "Indian Law",
+  "Insurance Defense", "International Law", "Internet Law", "Juvenile Law",
+  "Labor Law", "Land Use Law", "Landlord Tenant", "Lemon Law",
+  "Licensing Law", "Litigation", "Mass Tort", "Mediation",
+  "Mergers & Acquisitions", "Mining Law", "Motor Vehicle Accidents", "Municipal Law",
+  "Music Law", "Native American Law", "Oil & Gas Law", "Patent Law",
+  "Pension Law", "Pharmaceutical Law", "Probate Law", "Product Liability",
+  "Professional Liability", "Public Interest Law", "Railroad Law", "Regulatory Law",
+  "Religious Law", "Reproductive Rights", "School Law", "Securities Fraud",
+  "Sexual Harassment", "Small Business Law", "Social Media Law", "Sports Law",
+  "Startup Law", "Surrogacy Law", "Technology Law", "Telecommunications Law",
+  "Toxic Tort", "Trade Secret Law", "Trademark Law", "Transportation Law",
+  "Trusts & Estates", "Venture Capital", "Veterans Law", "Whistleblower Law",
+  "White Collar Crime", "Wills & Probate", "Zoning Law"
 ];
 
 export const AddLawyerForm: React.FC<AddLawyerFormProps> = ({ onAddLawyer, onClose }) => {
