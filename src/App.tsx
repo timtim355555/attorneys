@@ -357,9 +357,9 @@ const AllCitiesView = ({ setCurrentView }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {allCities.map((cityName, index) => (
+        {allCities.map((city, index) => (
           <a
-            key={cityName}
+            key={index}
             href="#"
             className="group bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg p-4 transition-all duration-200 shadow-sm hover:shadow-md"
           >
@@ -367,12 +367,11 @@ const AllCitiesView = ({ setCurrentView }) => {
               <div className="text-2xl">🏙️</div>
               <div className="flex-1">
                 <h3 className="font-semibold text-gray-900 group-hover:text-blue-600">
-                  {cityName}
+                  {city}
                 </h3>
                 <div className="flex justify-between items-center mt-1">
-                  <p className="text-sm text-gray-600">
-                    {Math.floor(Math.random() * 500) + 50} lawyers
-                  </p>
+                  <p className="text-sm text-gray-600">{Math.floor(Math.random() * 5000) + 500} lawyers</p>
+                  <p className="text-xs text-gray-500">{Math.floor(Math.random() * 2000) + 100}K</p>
                 </div>
               </div>
             </div>
