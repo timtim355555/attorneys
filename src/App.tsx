@@ -455,13 +455,67 @@ function App() {
       {/* Results Section */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Practice Areas Quick Search */}
+          <div className="mb-12">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Search Lawyers by Practice Area</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+              {practiceAreas.slice(0, 18).map(area => {
+                const lawyerCount = lawyers.filter(lawyer => 
+                  lawyer.practiceAreas.includes(area)
+                ).length;
+                
+                return (
+                  <button
+                    key={area}
+                    onClick={() => {
+                      setSelectedPracticeArea(area);
+                      setSearchTerm('');
+                      setSelectedLocation('');
+                      setSelectedAvailability('');
+                    }}
+                    className={`p-4 rounded-lg border-2 transition-all duration-200 text-left hover:shadow-md ${
+                      selectedPracticeArea === area
+                        ? 'border-blue-500 bg-blue-50 text-blue-900'
+                        : 'border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50'
+                    }`}
+                  >
+                    <div className="font-semibold text-sm mb-1">{area}</div>
+                    <div className="text-xs text-gray-500">
+                      {lawyerCount} lawyer{lawyerCount !== 1 ? 's' : ''}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            
+            {practiceAreas.length > 18 && (
+              <div className="text-center mt-6">
+                <button
+                  onClick={() => setShowFilters(true)}
+                  className="text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  View All {practiceAreas.length} Practice Areas →
+                </button>
+              </div>
+            )}
+          </div>
+
           <div className="flex items-center justify-between mb-8">
             <div>
               <h3 className="text-2xl font-bold text-gray-900">
                 {filteredLawyers.length} Lawyers Found
+                {selectedPracticeArea && (
+                  <span className="text-lg font-normal text-gray-600 ml-2">
+                    in {selectedPracticeArea}
+                  </span>
+                )}
               </h3>
               <p className="text-gray-600 mt-1">
-                Showing results {searchTerm || selectedPracticeArea || selectedLocation ? 'for your search' : 'in all areas'}
+                {selectedPracticeArea ? (
+                  <>Specialized attorneys in {selectedPracticeArea}</>
+                ) : (
+                  <>Showing results {searchTerm || selectedLocation ? 'for your search' : 'in all areas'}</>
+                )}
               </p>
             </div>
             
