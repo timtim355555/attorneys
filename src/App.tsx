@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, MapPin, Star, Phone, Mail, Globe, User, Filter, ChevronDown, Award, Clock, Shield, Users, Map } from 'lucide-react';
+import { Search, MapPin, Star, Phone, Mail, Globe, User, Filter, ChevronDown, Award, Clock, Shield, Users, Map, ArrowRight, CheckCircle, Scale, Gavel, BookOpen } from 'lucide-react';
 import { lawyers } from './data/lawyers';
 import { Lawyer } from './types/lawyer';
 import { LazyImage } from './components/LazyImage';
@@ -44,6 +44,11 @@ function App() {
   // Filter lawyers based on current selections
   const filteredLawyers = useMemo(() => {
     return lawyers.filter(lawyer => {
+      const matchesSearch = searchTerm === '' || 
+        lawyer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        lawyer.practiceAreas.some(area => area.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        lawyer.location.toLowerCase().includes(searchTerm.toLowerCase());
+      
       const matchesPracticeArea = selectedPracticeArea === '' || 
         lawyer.practiceAreas.includes(selectedPracticeArea);
       
@@ -53,14 +58,19 @@ function App() {
       const matchesCity = selectedCity === '' || 
         lawyer.location.includes(selectedCity);
 
-      return matchesPracticeArea && matchesState && matchesCity;
+      return matchesSearch && matchesPracticeArea && matchesState && matchesCity;
     });
-  }, [selectedPracticeArea, selectedState, selectedCity]);
+  }, [searchTerm, selectedPracticeArea, selectedState, selectedCity]);
+
+  const handleSearch = () => {
+    setShowResults(true);
+  };
 
   const handlePracticeAreaClick = (area: string) => {
     setSelectedPracticeArea(area);
     setSelectedState('');
     setSelectedCity('');
+    setSearchTerm('');
     setShowResults(true);
   };
 
@@ -68,6 +78,7 @@ function App() {
     setSelectedState(state);
     setSelectedPracticeArea('');
     setSelectedCity('');
+    setSearchTerm('');
     setShowResults(true);
   };
 
@@ -75,6 +86,7 @@ function App() {
     setSelectedCity(city);
     setSelectedPracticeArea('');
     setSelectedState('');
+    setSearchTerm('');
     setShowResults(true);
   };
 
@@ -82,6 +94,7 @@ function App() {
     setSelectedPracticeArea('');
     setSelectedState('');
     setSelectedCity('');
+    setSearchTerm('');
     setShowResults(false);
   };
 
@@ -187,23 +200,27 @@ function App() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <SEOHead type="homepage" />
       <SchemaMarkup type="homepage" lawyers={lawyers} />
       
-      {/* Header */}
+      {/* Header - Avvo Style */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-blue-600">Attorneys-deets</h1>
-              <span className="ml-2 text-sm text-gray-500">Find the right lawyer</span>
+              <div className="flex items-center">
+                <Scale className="h-8 w-8 text-blue-600 mr-2" />
+                <h1 className="text-2xl font-bold text-gray-900">Attorneys-deets</h1>
+              </div>
             </div>
             <nav className="hidden md:flex space-x-8">
-              <button onClick={clearFilters} className="text-gray-700 hover:text-blue-600 font-medium">Home</button>
-              <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">Practice Areas</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">About</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">Contact</a>
+              <button onClick={clearFilters} className="text-gray-700 hover:text-blue-600 font-medium">Find a lawyer</button>
+              <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">Legal advice</a>
+              <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">More</a>
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 font-medium">
+                For lawyers
+              </button>
             </nav>
           </div>
         </div>
@@ -211,27 +228,74 @@ function App() {
 
       {!showResults ? (
         <>
-          {/* Hero Section */}
-          <section className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-16">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Find the Right Lawyer for Your Case
-              </h2>
-              <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
-                Connect with experienced attorneys in your area. Browse verified lawyers with client reviews and ratings.
-              </p>
+          {/* Hero Section - Avvo Style */}
+          <section className="bg-gradient-to-br from-blue-50 via-white to-blue-50 py-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                  Find the right lawyer for you
+                </h2>
+                <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+                  Get the legal help you need. Search our directory of qualified attorneys.
+                </p>
+                
+                {/* Main Search Bar - Avvo Style */}
+                <div className="max-w-4xl mx-auto">
+                  <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+                    <div className="grid md:grid-cols-3 gap-4 mb-4">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="What do you need help with?"
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                        />
+                      </div>
+                      <div className="relative">
+                        <select
+                          value={selectedPracticeArea}
+                          onChange={(e) => setSelectedPracticeArea(e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg appearance-none bg-white"
+                        >
+                          <option value="">Practice area</option>
+                          {practiceAreas.map(area => (
+                            <option key={area} value={area}>{area}</option>
+                          ))}
+                        </select>
+                        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+                      </div>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="City, state"
+                          value={selectedLocation}
+                          onChange={(e) => setSelectedLocation(e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                        />
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleSearch}
+                      className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold text-lg"
+                    >
+                      Find lawyers
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
 
-          {/* Three Search Segments */}
-          <section className="py-16">
+          {/* Three Search Segments - Avvo Style */}
+          <section className="py-16 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               
-              {/* 1. Search Lawyers by Practice Area */}
+              {/* Browse by Practice Area */}
               <div className="mb-16">
-                <div className="text-center mb-12">
-                  <h3 className="text-3xl font-bold text-gray-900 mb-4">Search Lawyers by Practice Area</h3>
-                  <p className="text-lg text-gray-600">Find specialized attorneys for your specific legal needs</p>
+                <div className="text-center mb-8">
+                  <h3 className="text-3xl font-bold text-gray-900 mb-4">Browse lawyers by practice area</h3>
+                  <p className="text-lg text-gray-600">Find attorneys who specialize in your legal issue</p>
                 </div>
                 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
@@ -244,9 +308,14 @@ function App() {
                       <button
                         key={area}
                         onClick={() => handlePracticeAreaClick(area)}
-                        className="p-4 rounded-lg border-2 border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-900 transition-all duration-200 text-left hover:shadow-md"
+                        className="group p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-200 text-left"
                       >
-                        <div className="font-semibold text-sm mb-1">{area}</div>
+                        <div className="flex items-center mb-2">
+                          <Gavel className="h-5 w-5 text-blue-600 mr-2" />
+                        </div>
+                        <div className="font-semibold text-gray-900 text-sm mb-1 group-hover:text-blue-600">
+                          {area}
+                        </div>
                         <div className="text-xs text-gray-500">
                           {lawyerCount} lawyer{lawyerCount !== 1 ? 's' : ''}
                         </div>
@@ -257,18 +326,19 @@ function App() {
                 
                 {practiceAreas.length > 18 && (
                   <div className="text-center mt-8">
-                    <button className="text-blue-600 hover:text-blue-800 font-medium text-lg">
-                      View All {practiceAreas.length} Practice Areas →
+                    <button className="text-blue-600 hover:text-blue-800 font-medium text-lg flex items-center mx-auto">
+                      View all practice areas
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </button>
                   </div>
                 )}
               </div>
 
-              {/* 2. Search for Lawyers by States */}
+              {/* Browse by State */}
               <div className="mb-16">
-                <div className="text-center mb-12">
-                  <h3 className="text-3xl font-bold text-gray-900 mb-4">Search for Lawyers by States</h3>
-                  <p className="text-lg text-gray-600">Browse attorneys by state to find local legal representation</p>
+                <div className="text-center mb-8">
+                  <h3 className="text-3xl font-bold text-gray-900 mb-4">Find lawyers by state</h3>
+                  <p className="text-lg text-gray-600">Connect with attorneys in your state</p>
                 </div>
                 
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
@@ -281,12 +351,14 @@ function App() {
                       <button
                         key={state}
                         onClick={() => handleStateClick(state)}
-                        className="p-4 rounded-lg border-2 border-gray-200 bg-white text-gray-700 hover:border-green-300 hover:bg-green-50 hover:text-green-900 transition-all duration-200 text-center hover:shadow-md"
+                        className="group p-4 bg-white rounded-lg border border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 text-center"
                       >
                         <div className="flex items-center justify-center mb-2">
                           <Map className="h-5 w-5 text-green-600" />
                         </div>
-                        <div className="font-semibold text-sm mb-1">{state}</div>
+                        <div className="font-semibold text-gray-900 text-sm mb-1 group-hover:text-green-600">
+                          {state}
+                        </div>
                         <div className="text-xs text-gray-500">
                           {lawyerCount} lawyer{lawyerCount !== 1 ? 's' : ''}
                         </div>
@@ -296,11 +368,11 @@ function App() {
                 </div>
               </div>
 
-              {/* 3. Search Lawyers by Cities */}
+              {/* Browse by City */}
               <div className="mb-16">
-                <div className="text-center mb-12">
-                  <h3 className="text-3xl font-bold text-gray-900 mb-4">Search Lawyers by Cities</h3>
-                  <p className="text-lg text-gray-600">Find attorneys in your specific city or metropolitan area</p>
+                <div className="text-center mb-8">
+                  <h3 className="text-3xl font-bold text-gray-900 mb-4">Find lawyers by city</h3>
+                  <p className="text-lg text-gray-600">Locate attorneys in major cities</p>
                 </div>
                 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -313,12 +385,14 @@ function App() {
                       <button
                         key={city}
                         onClick={() => handleCityClick(city)}
-                        className="p-4 rounded-lg border-2 border-gray-200 bg-white text-gray-700 hover:border-purple-300 hover:bg-purple-50 hover:text-purple-900 transition-all duration-200 text-center hover:shadow-md"
+                        className="group p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-300 hover:shadow-md transition-all duration-200 text-center"
                       >
                         <div className="flex items-center justify-center mb-2">
                           <MapPin className="h-5 w-5 text-purple-600" />
                         </div>
-                        <div className="font-semibold text-sm mb-1">{city}</div>
+                        <div className="font-semibold text-gray-900 text-sm mb-1 group-hover:text-purple-600">
+                          {city}
+                        </div>
                         <div className="text-xs text-gray-500">
                           {lawyerCount} lawyer{lawyerCount !== 1 ? 's' : ''}
                         </div>
@@ -329,18 +403,55 @@ function App() {
                 
                 {cities.length > 20 && (
                   <div className="text-center mt-8">
-                    <button className="text-purple-600 hover:text-purple-800 font-medium text-lg">
-                      View All {cities.length} Cities →
+                    <button className="text-purple-600 hover:text-purple-800 font-medium text-lg flex items-center mx-auto">
+                      View all cities
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </button>
                   </div>
                 )}
               </div>
             </div>
           </section>
+
+          {/* Why Choose Us Section - Avvo Style */}
+          <section className="py-16 bg-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-12">
+                <h3 className="text-3xl font-bold text-gray-900 mb-4">Why choose Attorneys-deets?</h3>
+                <p className="text-lg text-gray-600">We make it easy to find the right legal help</p>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Shield className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <h4 className="text-xl font-semibold text-gray-900 mb-2">Verified attorneys</h4>
+                  <p className="text-gray-600">All lawyers are verified and licensed to practice law</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Star className="h-8 w-8 text-green-600" />
+                  </div>
+                  <h4 className="text-xl font-semibold text-gray-900 mb-2">Client reviews</h4>
+                  <p className="text-gray-600">Read real reviews from clients to make informed decisions</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Users className="h-8 w-8 text-purple-600" />
+                  </div>
+                  <h4 className="text-xl font-semibold text-gray-900 mb-2">Easy to connect</h4>
+                  <p className="text-gray-600">Contact attorneys directly with one click</p>
+                </div>
+              </div>
+            </div>
+          </section>
         </>
       ) : (
         /* Results Section */
-        <section className="py-12">
+        <section className="py-12 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-8">
               <div>
@@ -382,13 +493,13 @@ function App() {
                 <User className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">No lawyers found</h3>
                 <p className="text-gray-600 mb-4">
-                  Try selecting a different search option
+                  Try adjusting your search criteria
                 </p>
                 <button
                   onClick={clearFilters}
                   className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  Back to Search
+                  Start new search
                 </button>
               </div>
             )}
@@ -396,41 +507,44 @@ function App() {
         </section>
       )}
 
-      {/* Footer */}
+      {/* Footer - Avvo Style */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h4 className="text-lg font-semibold mb-4">Attorneys-deets</h4>
+              <div className="flex items-center mb-4">
+                <Scale className="h-6 w-6 text-blue-400 mr-2" />
+                <h4 className="text-lg font-semibold">Attorneys-deets</h4>
+              </div>
               <p className="text-gray-400">
-                Find the right lawyer for your legal needs. Connect with experienced attorneys in your area.
+                Find the right lawyer for your legal needs. Professional directory of verified attorneys.
               </p>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-4">Practice Areas</h4>
+              <h4 className="text-lg font-semibold mb-4">For clients</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">Personal Injury</a></li>
-                <li><a href="#" className="hover:text-white">Criminal Defense</a></li>
-                <li><a href="#" className="hover:text-white">Family Law</a></li>
-                <li><a href="#" className="hover:text-white">Business Law</a></li>
+                <li><a href="#" className="hover:text-white">Find a lawyer</a></li>
+                <li><a href="#" className="hover:text-white">Legal advice</a></li>
+                <li><a href="#" className="hover:text-white">Ask a lawyer</a></li>
+                <li><a href="#" className="hover:text-white">Legal forms</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-4">Resources</h4>
+              <h4 className="text-lg font-semibold mb-4">For lawyers</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">Find a Lawyer</a></li>
-                <li><a href="#" className="hover:text-white">Legal Advice</a></li>
-                <li><a href="#" className="hover:text-white">Law Firms</a></li>
-                <li><a href="#" className="hover:text-white">Legal Forms</a></li>
+                <li><a href="#" className="hover:text-white">Join our directory</a></li>
+                <li><a href="#" className="hover:text-white">Lawyer marketing</a></li>
+                <li><a href="#" className="hover:text-white">Resources</a></li>
+                <li><a href="#" className="hover:text-white">Support</a></li>
               </ul>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">About Us</a></li>
+                <li><a href="#" className="hover:text-white">About us</a></li>
                 <li><a href="#" className="hover:text-white">Contact</a></li>
-                <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-white">Privacy policy</a></li>
+                <li><a href="#" className="hover:text-white">Terms of service</a></li>
               </ul>
             </div>
           </div>
