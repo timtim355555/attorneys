@@ -8,9 +8,15 @@ interface AddLawyerFormProps {
 }
 
 const practiceAreaOptions = [
-  "Corporate Law", "Criminal Defense", "Family Law", "Personal Injury", 
-  "Real Estate Law", "Immigration Law", "Tax Law", "Employment Law",
-  "Intellectual Property", "Estate Planning", "Bankruptcy Law", "Environmental Law"
+  "Personal Injury", "Criminal Defense", "Family Law", "DUI/DWI", 
+  "Business Law", "Real Estate Law", "Immigration Law", "Employment Law",
+  "Bankruptcy Law", "Estate Planning", "Tax Law", "Medical Malpractice",
+  "Intellectual Property", "Corporate Law", "Workers' Compensation", 
+  "Social Security Disability", "Environmental Law", "Healthcare Law",
+  "Securities Law", "Construction Law", "Elder Law", "Insurance Law",
+  "Education Law", "Aviation Law", "Entertainment Law", "Military Law",
+  "Consumer Protection", "Civil Rights", "Nonprofit Law", "Energy Law",
+  "Privacy Law", "Maritime Law", "Cybersecurity Law"
 ];
 
 export const AddLawyerForm: React.FC<AddLawyerFormProps> = ({ onAddLawyer, onClose }) => {
