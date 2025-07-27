@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, MapPin, Users, Star, Phone, Mail, Globe, Filter, Plus, Upload, Download, Database, Settings, Menu, X, ChevronDown, Building, Scale, Briefcase, GraduationCap, Award, Clock, CheckCircle, ExternalLink, Github, FileSpreadsheet, Sitemap } from 'lucide-react';
+import { Search, MapPin, Users, Star, Phone, Mail, Globe, Filter, Plus, Upload, Download, Database, Settings, Menu, X, ChevronDown, Building, Scale, Briefcase, GraduationCap, Award, Clock, CheckCircle, ExternalLink, Github, FileSpreadsheet, Sigma as Sitemap } from 'lucide-react';
 import { Lawyer } from './types/lawyer';
 import { lawyers, addLawyer, updateLawyer, deleteLawyer } from './data/lawyers';
 import { AddLawyerForm } from './components/AddLawyerForm';
