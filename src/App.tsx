@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, MapPin, Star, Phone, Mail, Globe, User, Filter, ChevronDown, Award, Clock, Shield, Users, Map, ArrowRight, CheckCircle, Scale, Gavel, BookOpen, Zap, TrendingUp, Target, Sparkles, ChevronRight, Play } from 'lucide-react';
+import { Search, MapPin, Star, Phone, Mail, Globe, User, Filter, ChevronDown, Award, Clock, Shield, Users, Map, ArrowRight, CheckCircle, Scale, Gavel, BookOpen, Zap, TrendingUp, Target, Sparkles, ChevronRight, Play, Car, Home, Building, Briefcase, Heart, Plane, DollarSign, UserCheck, Lightbulb, FileText, TreePine, Stethoscope, GraduationCap, Hammer, Baby, Truck, Landmark, Mountain } from 'lucide-react';
 import { lawyers } from './data/lawyers';
 import { Lawyer } from './types/lawyer';
 import { LazyImage } from './components/LazyImage';
@@ -176,6 +176,154 @@ function App() {
     setShowResults(false);
   };
 
+  // Practice area icons mapping
+  const practiceAreaIcons: { [key: string]: any } = {
+    'Personal Injury': Car,
+    'Criminal Defense': Shield,
+    'Family Law': Heart,
+    'Corporate Law': Building,
+    'Real Estate Law': Home,
+    'Immigration Law': Plane,
+    'Tax Law': DollarSign,
+    'Employment Law': UserCheck,
+    'Intellectual Property': Lightbulb,
+    'Estate Planning': FileText,
+    'Bankruptcy Law': DollarSign,
+    'Environmental Law': TreePine,
+    'Healthcare Law': Stethoscope,
+    'Securities Law': TrendingUp,
+    'Construction Law': Hammer,
+    'Elder Law': Users,
+    'Insurance Law': Shield,
+    'Education Law': GraduationCap,
+    'Aviation Law': Plane,
+    'Entertainment Law': Star,
+    'Workers\' Compensation': Truck,
+    'Social Security Disability': UserCheck,
+    'Military Law': Award,
+    'Consumer Protection': Shield,
+    'Civil Rights': Scale,
+    'Nonprofit Law': Heart,
+    'Energy Law': Zap,
+    'Privacy Law': Lock,
+    'Maritime Law': Anchor,
+    'Cybersecurity Law': Shield,
+    'International Law': Globe,
+    'Franchise Law': Building,
+    'Agricultural Law': TreePine,
+    'Gaming Law': Star,
+    'Business Law': Briefcase,
+    'DUI/DWI': Car,
+    'Medical Malpractice': Stethoscope
+  };
+
+  // State icons mapping (using geographic/cultural associations)
+  const stateIcons: { [key: string]: any } = {
+    'NY': Building, // Skyscrapers
+    'CA': Star, // Hollywood
+    'TX': Landmark, // Oil/Big state
+    'FL': TreePine, // Palm trees
+    'IL': Building, // Chicago architecture
+    'PA': Landmark, // Liberty Bell
+    'OH': Users, // Population center
+    'GA': TreePine, // Peach state
+    'NC': Mountain, // Mountains
+    'MI': Car, // Auto industry
+    'NJ': Building, // Urban
+    'VA': Landmark, // Historic
+    'WA': Mountain, // Mountains
+    'AZ': Mountain, // Desert mountains
+    'MA': GraduationCap, // Education
+    'TN': Star, // Music
+    'IN': Users, // Crossroads
+    'MO': Users, // Gateway
+    'MD': Landmark, // Historic
+    'WI': Users, // Dairy/agriculture
+    'CO': Mountain, // Rocky Mountains
+    'MN': TreePine, // Forests/lakes
+    'SC': TreePine, // Palmetto state
+    'AL': TreePine, // Cotton state
+    'LA': TreePine, // Bayou
+    'KY': Mountain, // Bluegrass
+    'OR': TreePine, // Forests
+    'OK': Landmark, // Oil
+    'CT': Building, // Finance
+    'UT': Mountain, // Mountains
+    'IA': TreePine, // Agriculture
+    'NV': Star, // Las Vegas
+    'AR': TreePine, // Natural state
+    'MS': TreePine, // Magnolia state
+    'KS': TreePine, // Wheat
+    'NM': Mountain, // Desert
+    'NE': TreePine, // Cornhusker
+    'WV': Mountain, // Mountain state
+    'ID': Mountain, // Mountains
+    'HI': TreePine, // Tropical
+    'NH': Mountain, // White Mountains
+    'ME': TreePine, // Pine tree state
+    'RI': Building, // Ocean state
+    'MT': Mountain, // Big Sky
+    'DE': Building, // First state
+    'SD': Mountain, // Mount Rushmore
+    'ND': TreePine, // Peace Garden
+    'AK': Mountain, // Last frontier
+    'VT': Mountain, // Green Mountains
+    'WY': Mountain, // Equality state
+  };
+
+  // City icons mapping (using city characteristics)
+  const cityIcons: { [key: string]: any } = {
+    'New York': Building, // Skyscrapers
+    'Los Angeles': Star, // Hollywood
+    'Chicago': Building, // Architecture
+    'Houston': Landmark, // Space/Oil
+    'Phoenix': Mountain, // Desert
+    'Philadelphia': Landmark, // Liberty Bell
+    'San Antonio': Landmark, // Alamo
+    'San Diego': TreePine, // Beaches
+    'Dallas': Building, // Business
+    'San Jose': Lightbulb, // Tech
+    'Austin': Star, // Music
+    'Jacksonville': TreePine, // Beaches
+    'Fort Worth': Landmark, // Stockyards
+    'Columbus': Users, // Population
+    'Charlotte': Building, // Banking
+    'San Francisco': Building, // Hills/Tech
+    'Indianapolis': Car, // Racing
+    'Seattle': Mountain, // Mountains
+    'Denver': Mountain, // Mile High
+    'Washington': Landmark, // Capitol
+    'Boston': GraduationCap, // Education
+    'El Paso': Mountain, // Desert
+    'Nashville': Star, // Music
+    'Detroit': Car, // Auto
+    'Oklahoma City': Landmark, // Oil
+    'Portland': TreePine, // Forests
+    'Las Vegas': Star, // Entertainment
+    'Memphis': Star, // Music
+    'Louisville': Star, // Derby
+    'Baltimore': Building, // Harbor
+    'Milwaukee': Users, // Brewing
+    'Albuquerque': Mountain, // Desert
+    'Tucson': Mountain, // Desert
+    'Fresno': TreePine, // Agriculture
+    'Sacramento': TreePine, // Capital
+    'Mesa': Mountain, // Desert
+    'Kansas City': Users, // BBQ
+    'Atlanta': TreePine, // Peach
+    'Long Beach': TreePine, // Beach
+    'Colorado Springs': Mountain, // Mountains
+    'Raleigh': TreePine, // Research Triangle
+    'Miami': TreePine, // Beaches
+    'Virginia Beach': TreePine, // Beach
+    'Omaha': Users, // Agriculture
+    'Oakland': Building, // Bay Area
+    'Minneapolis': TreePine, // Lakes
+    'Tulsa': Landmark, // Oil
+    'Arlington': Users, // Sports
+    'Tampa': TreePine, // Beaches
+    'New Orleans': Star, // Jazz
+  };
   const LawyerCard = ({ lawyer }: { lawyer: Lawyer }) => (
     <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
       <div className="flex items-start space-x-4">
@@ -465,6 +613,8 @@ function App() {
                       lawyer.practiceAreas.includes(area)
                     ).length;
                     
+                    const IconComponent = practiceAreaIcons[area] || Gavel;
+                    
                     return (
                       <button
                         key={area}
@@ -477,7 +627,7 @@ function App() {
                         </div>
                         
                         <div className="bg-blue-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-700 transition-colors">
-                          <Gavel className="h-6 w-6 text-white" />
+                          <IconComponent className="h-6 w-6 text-white" />
                         </div>
                         
                         <div className="font-bold text-gray-900 text-sm mb-2 group-hover:text-blue-600 transition-colors">
@@ -511,6 +661,8 @@ function App() {
                       lawyer.location.includes(state)
                     ).length;
                     
+                    const IconComponent = stateIcons[state] || Map;
+                    
                     return (
                       <button
                         key={state}
@@ -519,7 +671,7 @@ function App() {
                         style={{ animationDelay: `${index * 50}ms` }}
                       >
                         <div className="bg-green-600 w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-green-700 transition-colors">
-                          <Map className="h-5 w-5 text-white" />
+                          <IconComponent className="h-5 w-5 text-white" />
                         </div>
                         <div className="font-bold text-gray-900 text-sm mb-1 group-hover:text-green-600 transition-colors">
                           {state}
@@ -550,6 +702,8 @@ function App() {
                       lawyer.location.includes(city)
                     ).length;
                     
+                    const IconComponent = cityIcons[city] || MapPin;
+                    
                     return (
                       <button
                         key={city}
@@ -558,7 +712,7 @@ function App() {
                         style={{ animationDelay: `${index * 75}ms` }}
                       >
                         <div className="bg-purple-600 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-700 transition-colors">
-                          <MapPin className="h-6 w-6 text-white" />
+                          <IconComponent className="h-6 w-6 text-white" />
                         </div>
                         <div className="font-bold text-gray-900 text-sm mb-2 group-hover:text-purple-600 transition-colors">
                           {city}
