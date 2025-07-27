@@ -624,25 +624,25 @@ function App() {
                       <button
                         key={area}
                         onClick={() => handlePracticeAreaClick(area)}
-                        className="group relative p-6 bg-gradient-to-br from-white to-blue-50 rounded-2xl border-2 border-gray-200 hover:border-blue-300 hover:shadow-xl transition-all duration-300 text-left hover:-translate-y-2"
+                        className="group relative p-6 bg-gradient-to-br from-white to-cyan-50 rounded-2xl border-2 border-gray-200 hover:border-cyan-300 hover:shadow-xl transition-all duration-300 text-left hover:-translate-y-2"
                         style={{ animationDelay: `${index * 100}ms` }}
                       >
                         <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <ChevronRight className="h-5 w-5 text-blue-600" />
+                          <ChevronRight className="h-5 w-5" style={{ color: '#62D3F9' }} />
                         </div>
                         
-                        <div className="bg-blue-600 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-700 transition-colors">
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors" style={{ backgroundColor: '#62D3F9' }}>
                           <IconComponent className="h-6 w-6 text-white" />
                         </div>
                         
-                        <div className="font-bold text-gray-900 text-sm mb-2 group-hover:text-blue-600 transition-colors">
+                        <div className="font-bold text-gray-900 text-sm mb-2 group-hover:transition-colors" style={{ '--hover-color': '#62D3F9' }}>
                           {area}
                         </div>
                         <div className="text-xs text-gray-500 font-medium">
                           {lawyerCount} attorney{lawyerCount !== 1 ? 's' : ''}
                         </div>
                         
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity" style={{ background: `linear-gradient(to right, #62D3F9, #62D3F9)` }}></div>
                       </button>
                     );
                   })}
@@ -652,9 +652,9 @@ function App() {
               {/* States Section */}
               <div className="mb-20">
                 <div className="text-center mb-12">
-                  <div className="inline-flex items-center bg-green-100 rounded-full px-6 py-2 mb-4">
-                    <Map className="h-5 w-5 mr-2 text-green-600" />
-                    <span className="text-sm font-semibold text-green-800">BY STATE</span>
+                  <div className="inline-flex items-center rounded-full px-6 py-2 mb-4" style={{ backgroundColor: 'rgba(98, 211, 249, 0.1)' }}>
+                    <Map className="h-5 w-5 mr-2" style={{ color: '#62D3F9' }} />
+                    <span className="text-sm font-semibold" style={{ color: '#62D3F9' }}>BY STATE</span>
                   </div>
                   <h3 className="text-4xl font-bold text-gray-900 mb-4">Find Lawyers by State</h3>
                   <p className="text-xl text-gray-600">Connect with attorneys licensed in your state</p>
@@ -672,13 +672,13 @@ function App() {
                       <button
                         key={state}
                         onClick={() => handleStateClick(state)}
-                        className="group p-4 bg-gradient-to-br from-white to-green-50 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-lg transition-all duration-300 text-center hover:-translate-y-1"
+                        className="group p-4 bg-gradient-to-br from-white to-cyan-50 rounded-xl border-2 border-gray-200 hover:border-cyan-300 hover:shadow-lg transition-all duration-300 text-center hover:-translate-y-1"
                         style={{ animationDelay: `${index * 50}ms` }}
                       >
-                        <div className="bg-green-600 w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-green-700 transition-colors">
+                        <div className="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-3 transition-colors" style={{ backgroundColor: '#62D3F9' }}>
                           <IconComponent className="h-5 w-5 text-white" />
                         </div>
-                        <div className="font-bold text-gray-900 text-sm mb-1 group-hover:text-green-600 transition-colors">
+                        <div className="font-bold text-gray-900 text-sm mb-1 group-hover:transition-colors" style={{ '--hover-color': '#62D3F9' }}>
                           {state}
                         </div>
                         <div className="text-xs text-gray-500 font-medium">
@@ -693,9 +693,9 @@ function App() {
               {/* Cities Section */}
               <div className="mb-20">
                 <div className="text-center mb-12">
-                  <div className="inline-flex items-center bg-purple-100 rounded-full px-6 py-2 mb-4">
-                    <MapPin className="h-5 w-5 mr-2 text-purple-600" />
-                    <span className="text-sm font-semibold text-purple-800">BY CITY</span>
+                  <div className="inline-flex items-center rounded-full px-6 py-2 mb-4" style={{ backgroundColor: 'rgba(98, 211, 249, 0.1)' }}>
+                    <MapPin className="h-5 w-5 mr-2" style={{ color: '#62D3F9' }} />
+                    <span className="text-sm font-semibold" style={{ color: '#62D3F9' }}>BY CITY</span>
                   </div>
                   <h3 className="text-4xl font-bold text-gray-900 mb-4">Find Lawyers by City</h3>
                   <p className="text-xl text-gray-600">Locate attorneys in major metropolitan areas</p>
@@ -713,13 +713,13 @@ function App() {
                       <button
                         key={city}
                         onClick={() => handleCityClick(city)}
-                        className="group p-6 bg-gradient-to-br from-white to-purple-50 rounded-2xl border-2 border-gray-200 hover:border-purple-300 hover:shadow-xl transition-all duration-300 text-center hover:-translate-y-2"
+                        className="group p-6 bg-gradient-to-br from-white to-cyan-50 rounded-2xl border-2 border-gray-200 hover:border-cyan-300 hover:shadow-xl transition-all duration-300 text-center hover:-translate-y-2"
                         style={{ animationDelay: `${index * 75}ms` }}
                       >
-                        <div className="bg-purple-600 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-700 transition-colors">
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 transition-colors" style={{ backgroundColor: '#62D3F9' }}>
                           <IconComponent className="h-6 w-6 text-white" />
                         </div>
-                        <div className="font-bold text-gray-900 text-sm mb-2 group-hover:text-purple-600 transition-colors">
+                        <div className="font-bold text-gray-900 text-sm mb-2 group-hover:transition-colors" style={{ '--hover-color': '#62D3F9' }}>
                           {city}
                         </div>
                         <div className="text-xs text-gray-500 font-medium">
