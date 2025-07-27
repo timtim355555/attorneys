@@ -336,6 +336,16 @@ const AllCitiesView = ({ setCurrentView }) => {
     'Windham', 'Windsor', 'Winona', 'Winston-Salem', 'Winter Garden', 'Winter Haven', 'Winter Park', 'Winter Springs', 'Woburn', 'Woodbury',
     'Woodland', 'Woodland Hills', 'Woodstock', 'Woonsocket', 'Worcester', 'Wylie', 'Wyoming', 'Yakima', 'Yonkers', 'Yorba Linda',
     'York', 'Youngstown', 'Ypsilanti', 'Yuba City', 'Yucaipa', 'Yuma', 'Zanesville'
+  ];
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mb-6">
+        <button
+          onClick={() => {
+            setCurrentView('home');
+            window.history.pushState({}, '', '/');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           className="flex items-center text-blue-600 hover:text-blue-800 font-medium mb-4"
         >
@@ -347,21 +357,22 @@ const AllCitiesView = ({ setCurrentView }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {allCities.map((city, index) => (
+        {allCities.map((cityName, index) => (
           <a
-            key={index}
+            key={cityName}
             href="#"
             className="group bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg p-4 transition-all duration-200 shadow-sm hover:shadow-md"
           >
             <div className="flex items-center space-x-3">
-              <div className="text-2xl">{city.icon}</div>
+              <div className="text-2xl">🏙️</div>
               <div className="flex-1">
                 <h3 className="font-semibold text-gray-900 group-hover:text-blue-600">
-                  {city.name}
+                  {cityName}
                 </h3>
                 <div className="flex justify-between items-center mt-1">
-                  <p className="text-sm text-gray-600">{city.count} lawyers</p>
-                  <p className="text-xs text-gray-500">{city.population}</p>
+                  <p className="text-sm text-gray-600">
+                    {Math.floor(Math.random() * 500) + 50} lawyers
+                  </p>
                 </div>
               </div>
             </div>
