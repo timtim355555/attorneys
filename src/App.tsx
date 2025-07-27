@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, MapPin, Star, Phone, Mail, Globe, User, Filter, ChevronDown, Award, Clock, Shield, Users } from 'lucide-react';
+import { Search, MapPin, Star, Phone, Mail, Globe, User, Filter, ChevronDown, Award, Clock, Shield, Users, Map } from 'lucide-react';
 import { lawyers } from './data/lawyers';
 import { Lawyer } from './types/lawyer';
 import { LazyImage } from './components/LazyImage';
@@ -10,11 +10,11 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPracticeArea, setSelectedPracticeArea] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
-  const [selectedAvailability, setSelectedAvailability] = useState('');
-  const [showFilters, setShowFilters] = useState(false);
-  const [selectedLawyer, setSelectedLawyer] = useState<Lawyer | null>(null);
+  const [selectedState, setSelectedState] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+  const [showResults, setShowResults] = useState(false);
 
-  // Get unique practice areas and locations
+  // Get unique practice areas, states, and cities
   const practiceAreas = useMemo(() => {
     const areas = new Set<string>();
     lawyers.forEach(lawyer => {
@@ -23,37 +23,66 @@ function App() {
     return Array.from(areas).sort();
   }, []);
 
-  const locations = useMemo(() => {
-    const locs = new Set(lawyers.map(lawyer => lawyer.location));
-    return Array.from(locs).sort();
+  const states = useMemo(() => {
+    const stateSet = new Set<string>();
+    lawyers.forEach(lawyer => {
+      const state = lawyer.location.split(',')[1]?.trim();
+      if (state) stateSet.add(state);
+    });
+    return Array.from(stateSet).sort();
   }, []);
 
-  // Filter lawyers
+  const cities = useMemo(() => {
+    const citySet = new Set<string>();
+    lawyers.forEach(lawyer => {
+      const city = lawyer.location.split(',')[0]?.trim();
+      if (city) citySet.add(city);
+    });
+    return Array.from(citySet).sort();
+  }, []);
+
+  // Filter lawyers based on current selections
   const filteredLawyers = useMemo(() => {
     return lawyers.filter(lawyer => {
-      const matchesSearch = searchTerm === '' || 
-        lawyer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        lawyer.practiceAreas.some(area => area.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        lawyer.location.toLowerCase().includes(searchTerm.toLowerCase());
-      
       const matchesPracticeArea = selectedPracticeArea === '' || 
         lawyer.practiceAreas.includes(selectedPracticeArea);
       
-      const matchesLocation = selectedLocation === '' || 
-        lawyer.location === selectedLocation;
+      const matchesState = selectedState === '' || 
+        lawyer.location.includes(selectedState);
       
-      const matchesAvailability = selectedAvailability === '' || 
-        lawyer.availability === selectedAvailability;
+      const matchesCity = selectedCity === '' || 
+        lawyer.location.includes(selectedCity);
 
-      return matchesSearch && matchesPracticeArea && matchesLocation && matchesAvailability;
+      return matchesPracticeArea && matchesState && matchesCity;
     });
-  }, [searchTerm, selectedPracticeArea, selectedLocation, selectedAvailability]);
+  }, [selectedPracticeArea, selectedState, selectedCity]);
+
+  const handlePracticeAreaClick = (area: string) => {
+    setSelectedPracticeArea(area);
+    setSelectedState('');
+    setSelectedCity('');
+    setShowResults(true);
+  };
+
+  const handleStateClick = (state: string) => {
+    setSelectedState(state);
+    setSelectedPracticeArea('');
+    setSelectedCity('');
+    setShowResults(true);
+  };
+
+  const handleCityClick = (city: string) => {
+    setSelectedCity(city);
+    setSelectedPracticeArea('');
+    setSelectedState('');
+    setShowResults(true);
+  };
 
   const clearFilters = () => {
-    setSearchTerm('');
     setSelectedPracticeArea('');
-    setSelectedLocation('');
-    setSelectedAvailability('');
+    setSelectedState('');
+    setSelectedCity('');
+    setShowResults(false);
   };
 
   const LawyerCard = ({ lawyer }: { lawyer: Lawyer }) => (
@@ -134,12 +163,6 @@ function App() {
                   <Mail className="h-4 w-4 mr-1" />
                   Email
                 </a>
-                <button
-                  onClick={() => setSelectedLawyer(lawyer)}
-                  className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                >
-                  View Profile
-                </button>
               </div>
             </div>
             
@@ -163,185 +186,6 @@ function App() {
     </div>
   );
 
-  const LawyerProfile = ({ lawyer }: { lawyer: Lawyer }) => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="relative">
-          <button
-            onClick={() => setSelectedLawyer(null)}
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10"
-          >
-            ✕
-          </button>
-          
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-8 rounded-t-2xl">
-            <div className="flex items-start space-x-6">
-              <LazyImage
-                src={lawyer.image || 'https://images.pexels.com/photos/3777931/pexels-photo-3777931.jpeg'}
-                alt={lawyer.name}
-                className="w-32 h-32 rounded-xl object-cover border-4 border-white"
-                priority={true}
-              />
-              
-              <div className="flex-1">
-                <h1 className="text-3xl font-bold mb-2">{lawyer.name}</h1>
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="flex items-center">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`h-5 w-5 ${
-                          i < Math.floor(lawyer.rating)
-                            ? 'text-yellow-400 fill-current'
-                            : 'text-blue-300'
-                        }`}
-                      />
-                    ))}
-                    <span className="ml-2 text-blue-100">
-                      {lawyer.rating} ({lawyer.reviews} reviews)
-                    </span>
-                  </div>
-                  {lawyer.verified && (
-                    <div className="flex items-center bg-green-500 px-2 py-1 rounded-full">
-                      <Shield className="h-4 w-4 mr-1" />
-                      <span className="text-sm">Verified</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4 text-blue-100">
-                  <div className="flex items-center">
-                    <MapPin className="h-4 w-4 mr-2" />
-                    <span>{lawyer.location}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-2" />
-                    <span>{lawyer.experience} years experience</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Award className="h-4 w-4 mr-2" />
-                    <span>{lawyer.college}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Users className="h-4 w-4 mr-2" />
-                    <span>{lawyer.availability} for new clients</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="p-8">
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="md:col-span-2">
-                <section className="mb-8">
-                  <h2 className="text-2xl font-semibold text-gray-900 mb-4">About</h2>
-                  <p className="text-gray-700 leading-relaxed">{lawyer.about}</p>
-                </section>
-                
-                <section className="mb-8">
-                  <h2 className="text-2xl font-semibold text-gray-900 mb-4">Practice Areas</h2>
-                  <div className="grid grid-cols-2 gap-3">
-                    {lawyer.practiceAreas.map((area, index) => (
-                      <div key={index} className="flex items-center p-3 bg-blue-50 rounded-lg">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
-                        <span className="text-blue-900 font-medium">{area}</span>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-                
-                {lawyer.specializations && lawyer.specializations.length > 0 && (
-                  <section className="mb-8">
-                    <h2 className="text-2xl font-semibold text-gray-900 mb-4">Specializations</h2>
-                    <div className="flex flex-wrap gap-2">
-                      {lawyer.specializations.map((spec, index) => (
-                        <span
-                          key={index}
-                          className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
-                        >
-                          {spec}
-                        </span>
-                      ))}
-                    </div>
-                  </section>
-                )}
-              </div>
-              
-              <div>
-                <div className="bg-gray-50 rounded-xl p-6 sticky top-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
-                  
-                  <div className="space-y-4">
-                    <a
-                      href={`tel:${lawyer.phone}`}
-                      className="flex items-center w-full bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      <Phone className="h-5 w-5 mr-3" />
-                      <div>
-                        <div className="font-medium">Call Now</div>
-                        <div className="text-sm text-blue-100">{lawyer.phone}</div>
-                      </div>
-                    </a>
-                    
-                    <a
-                      href={`mailto:${lawyer.email}`}
-                      className="flex items-center w-full border border-gray-300 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors"
-                    >
-                      <Mail className="h-5 w-5 mr-3" />
-                      <div>
-                        <div className="font-medium">Send Email</div>
-                        <div className="text-sm text-gray-500">{lawyer.email}</div>
-                      </div>
-                    </a>
-                    
-                    {lawyer.website && (
-                      <a
-                        href={lawyer.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center w-full border border-gray-300 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors"
-                      >
-                        <Globe className="h-5 w-5 mr-3" />
-                        <div>
-                          <div className="font-medium">Visit Website</div>
-                          <div className="text-sm text-gray-500">View firm details</div>
-                        </div>
-                      </a>
-                    )}
-                  </div>
-                  
-                  <div className="mt-6 pt-6 border-t border-gray-200">
-                    <div className="space-y-3 text-sm">
-                      {lawyer.barNumber && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">Bar Number:</span>
-                          <span className="font-medium">{lawyer.barNumber}</span>
-                        </div>
-                      )}
-                      {lawyer.languages && lawyer.languages.length > 0 && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">Languages:</span>
-                          <span className="font-medium">{lawyer.languages.join(', ')}</span>
-                        </div>
-                      )}
-                      {lawyer.hourlyRate && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">Rate:</span>
-                          <span className="font-medium">{lawyer.hourlyRate}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-gray-50">
       <SEOHead type="homepage" />
@@ -356,7 +200,7 @@ function App() {
               <span className="ml-2 text-sm text-gray-500">Find the right lawyer</span>
             </div>
             <nav className="hidden md:flex space-x-8">
-              <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">Find Lawyers</a>
+              <button onClick={clearFilters} className="text-gray-700 hover:text-blue-600 font-medium">Home</button>
               <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">Practice Areas</a>
               <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">About</a>
               <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">Contact</a>
@@ -365,194 +209,192 @@ function App() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Find the Right Lawyer for Your Case
-          </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
-            Connect with experienced attorneys in your area. Browse verified lawyers with client reviews and ratings.
-          </p>
-          
-          {/* Search Bar */}
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-2xl p-6 shadow-2xl">
-              <div className="grid md:grid-cols-4 gap-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Search lawyers or practice areas..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  />
+      {!showResults ? (
+        <>
+          {/* Hero Section */}
+          <section className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                Find the Right Lawyer for Your Case
+              </h2>
+              <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+                Connect with experienced attorneys in your area. Browse verified lawyers with client reviews and ratings.
+              </p>
+            </div>
+          </section>
+
+          {/* Three Search Segments */}
+          <section className="py-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              
+              {/* 1. Search Lawyers by Practice Area */}
+              <div className="mb-16">
+                <div className="text-center mb-12">
+                  <h3 className="text-3xl font-bold text-gray-900 mb-4">Search Lawyers by Practice Area</h3>
+                  <p className="text-lg text-gray-600">Find specialized attorneys for your specific legal needs</p>
                 </div>
                 
-                <select
-                  value={selectedPracticeArea}
-                  onChange={(e) => setSelectedPracticeArea(e.target.value)}
-                  className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                >
-                  <option value="">All Practice Areas</option>
-                  {practiceAreas.map(area => (
-                    <option key={area} value={area}>{area}</option>
-                  ))}
-                </select>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                  {practiceAreas.slice(0, 18).map(area => {
+                    const lawyerCount = lawyers.filter(lawyer => 
+                      lawyer.practiceAreas.includes(area)
+                    ).length;
+                    
+                    return (
+                      <button
+                        key={area}
+                        onClick={() => handlePracticeAreaClick(area)}
+                        className="p-4 rounded-lg border-2 border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-900 transition-all duration-200 text-left hover:shadow-md"
+                      >
+                        <div className="font-semibold text-sm mb-1">{area}</div>
+                        <div className="text-xs text-gray-500">
+                          {lawyerCount} lawyer{lawyerCount !== 1 ? 's' : ''}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
                 
-                <select
-                  value={selectedLocation}
-                  onChange={(e) => setSelectedLocation(e.target.value)}
-                  className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                >
-                  <option value="">All Locations</option>
-                  {locations.map(location => (
-                    <option key={location} value={location}>{location}</option>
-                  ))}
-                </select>
+                {practiceAreas.length > 18 && (
+                  <div className="text-center mt-8">
+                    <button className="text-blue-600 hover:text-blue-800 font-medium text-lg">
+                      View All {practiceAreas.length} Practice Areas →
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* 2. Search for Lawyers by States */}
+              <div className="mb-16">
+                <div className="text-center mb-12">
+                  <h3 className="text-3xl font-bold text-gray-900 mb-4">Search for Lawyers by States</h3>
+                  <p className="text-lg text-gray-600">Browse attorneys by state to find local legal representation</p>
+                </div>
                 
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+                  {states.map(state => {
+                    const lawyerCount = lawyers.filter(lawyer => 
+                      lawyer.location.includes(state)
+                    ).length;
+                    
+                    return (
+                      <button
+                        key={state}
+                        onClick={() => handleStateClick(state)}
+                        className="p-4 rounded-lg border-2 border-gray-200 bg-white text-gray-700 hover:border-green-300 hover:bg-green-50 hover:text-green-900 transition-all duration-200 text-center hover:shadow-md"
+                      >
+                        <div className="flex items-center justify-center mb-2">
+                          <Map className="h-5 w-5 text-green-600" />
+                        </div>
+                        <div className="font-semibold text-sm mb-1">{state}</div>
+                        <div className="text-xs text-gray-500">
+                          {lawyerCount} lawyer{lawyerCount !== 1 ? 's' : ''}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 3. Search Lawyers by Cities */}
+              <div className="mb-16">
+                <div className="text-center mb-12">
+                  <h3 className="text-3xl font-bold text-gray-900 mb-4">Search Lawyers by Cities</h3>
+                  <p className="text-lg text-gray-600">Find attorneys in your specific city or metropolitan area</p>
+                </div>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                  {cities.slice(0, 20).map(city => {
+                    const lawyerCount = lawyers.filter(lawyer => 
+                      lawyer.location.includes(city)
+                    ).length;
+                    
+                    return (
+                      <button
+                        key={city}
+                        onClick={() => handleCityClick(city)}
+                        className="p-4 rounded-lg border-2 border-gray-200 bg-white text-gray-700 hover:border-purple-300 hover:bg-purple-50 hover:text-purple-900 transition-all duration-200 text-center hover:shadow-md"
+                      >
+                        <div className="flex items-center justify-center mb-2">
+                          <MapPin className="h-5 w-5 text-purple-600" />
+                        </div>
+                        <div className="font-semibold text-sm mb-1">{city}</div>
+                        <div className="text-xs text-gray-500">
+                          {lawyerCount} lawyer{lawyerCount !== 1 ? 's' : ''}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                
+                {cities.length > 20 && (
+                  <div className="text-center mt-8">
+                    <button className="text-purple-600 hover:text-purple-800 font-medium text-lg">
+                      View All {cities.length} Cities →
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        </>
+      ) : (
+        /* Results Section */
+        <section className="py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900">
+                  {filteredLawyers.length} Lawyers Found
+                  {selectedPracticeArea && (
+                    <span className="text-lg font-normal text-gray-600 ml-2">
+                      in {selectedPracticeArea}
+                    </span>
+                  )}
+                  {selectedState && (
+                    <span className="text-lg font-normal text-gray-600 ml-2">
+                      in {selectedState}
+                    </span>
+                  )}
+                  {selectedCity && (
+                    <span className="text-lg font-normal text-gray-600 ml-2">
+                      in {selectedCity}
+                    </span>
+                  )}
+                </h3>
                 <button
-                  onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center justify-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  onClick={clearFilters}
+                  className="text-blue-600 hover:text-blue-800 font-medium mt-2"
                 >
-                  <Filter className="h-5 w-5 mr-2" />
-                  Filters
-                  <ChevronDown className={`h-4 w-4 ml-2 transform transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+                  ← Back to Search
                 </button>
               </div>
-              
-              {showFilters && (
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <select
-                      value={selectedAvailability}
-                      onChange={(e) => setSelectedAvailability(e.target.value)}
-                      className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                    >
-                      <option value="">Any Availability</option>
-                      <option value="Available">Available</option>
-                      <option value="Limited">Limited</option>
-                      <option value="Busy">Busy</option>
-                    </select>
-                    
-                    <div className="flex items-center">
-                      <button
-                        onClick={clearFilters}
-                        className="text-blue-600 hover:text-blue-800 font-medium"
-                      >
-                        Clear All Filters
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Results Section */}
-      <section className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Practice Areas Quick Search */}
-          <div className="mb-12">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Search Lawyers by Practice Area</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-              {practiceAreas.slice(0, 18).map(area => {
-                const lawyerCount = lawyers.filter(lawyer => 
-                  lawyer.practiceAreas.includes(area)
-                ).length;
-                
-                return (
-                  <button
-                    key={area}
-                    onClick={() => {
-                      setSelectedPracticeArea(area);
-                      setSearchTerm('');
-                      setSelectedLocation('');
-                      setSelectedAvailability('');
-                    }}
-                    className={`p-4 rounded-lg border-2 transition-all duration-200 text-left hover:shadow-md ${
-                      selectedPracticeArea === area
-                        ? 'border-blue-500 bg-blue-50 text-blue-900'
-                        : 'border-gray-200 bg-white text-gray-700 hover:border-blue-300 hover:bg-blue-50'
-                    }`}
-                  >
-                    <div className="font-semibold text-sm mb-1">{area}</div>
-                    <div className="text-xs text-gray-500">
-                      {lawyerCount} lawyer{lawyerCount !== 1 ? 's' : ''}
-                    </div>
-                  </button>
-                );
-              })}
             </div>
             
-            {practiceAreas.length > 18 && (
-              <div className="text-center mt-6">
+            <div className="space-y-6">
+              {filteredLawyers.map(lawyer => (
+                <LawyerCard key={lawyer.id} lawyer={lawyer} />
+              ))}
+            </div>
+            
+            {filteredLawyers.length === 0 && (
+              <div className="text-center py-12">
+                <User className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">No lawyers found</h3>
+                <p className="text-gray-600 mb-4">
+                  Try selecting a different search option
+                </p>
                 <button
-                  onClick={() => setShowFilters(true)}
-                  className="text-blue-600 hover:text-blue-800 font-medium"
+                  onClick={clearFilters}
+                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  View All {practiceAreas.length} Practice Areas →
+                  Back to Search
                 </button>
               </div>
             )}
           </div>
-
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900">
-                {filteredLawyers.length} Lawyers Found
-                {selectedPracticeArea && (
-                  <span className="text-lg font-normal text-gray-600 ml-2">
-                    in {selectedPracticeArea}
-                  </span>
-                )}
-              </h3>
-              <p className="text-gray-600 mt-1">
-                {selectedPracticeArea ? (
-                  <>Specialized attorneys in {selectedPracticeArea}</>
-                ) : (
-                  <>Showing results {searchTerm || selectedLocation ? 'for your search' : 'in all areas'}</>
-                )}
-              </p>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Sort by:</span>
-              <select className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                <option>Highest Rated</option>
-                <option>Most Reviews</option>
-                <option>Years of Experience</option>
-                <option>Availability</option>
-              </select>
-            </div>
-          </div>
-          
-          <div className="space-y-6">
-            {filteredLawyers.map(lawyer => (
-              <LawyerCard key={lawyer.id} lawyer={lawyer} />
-            ))}
-          </div>
-          
-          {filteredLawyers.length === 0 && (
-            <div className="text-center py-12">
-              <User className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No lawyers found</h3>
-              <p className="text-gray-600 mb-4">
-                Try adjusting your search criteria or clearing filters
-              </p>
-              <button
-                onClick={clearFilters}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Clear Filters
-              </button>
-            </div>
-          )}
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
@@ -597,9 +439,6 @@ function App() {
           </div>
         </div>
       </footer>
-
-      {/* Lawyer Profile Modal */}
-      {selectedLawyer && <LawyerProfile lawyer={selectedLawyer} />}
     </div>
   );
 }
