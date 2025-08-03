@@ -2,6 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Search, MapPin, Star, Phone, Mail, Globe, User, Filter, ChevronDown, Award, Clock, Shield, Users, Map, ArrowRight, CheckCircle, Scale, Gavel, BookOpen, Zap, TrendingUp, Target, Sparkles, ChevronRight, Play, Car, Home, Building, Briefcase, Heart, Plane, DollarSign, UserCheck, Lightbulb, FileText, TreePine, Stethoscope, GraduationCap, Hammer, Baby, Truck, Landmark, Mountain, Lock, Anchor } from 'lucide-react';
 import { lawyers } from './data/lawyers';
 import { Lawyer } from './types/lawyer';
+import { SEOHead } from './components/SEOHead';
+import { SchemaMarkup } from './components/SchemaMarkup';
 import { LazyImage } from './components/LazyImage';
 import { SEOHead } from './components/SEOHead';
 import { SchemaMarkup } from './components/SchemaMarkup';
