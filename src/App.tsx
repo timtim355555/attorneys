@@ -496,31 +496,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* SEO Head Component */}
-      {selectedLawyer ? (
-        <SEOHead type="lawyer" data={{ lawyer: selectedLawyer }} />
-      ) : selectedPracticeArea ? (
-        <SEOHead type="practiceArea" data={{ practiceArea: selectedPracticeArea }} />
-      ) : selectedLocation ? (
-        <SEOHead type="location" data={{ location: selectedLocation }} />
-      ) : (
-        <SEOHead type="homepage" />
-      )}
-
-      {/* Schema Markup */}
-      {selectedLawyer ? (
-        <SchemaMarkup type="lawyer" lawyer={selectedLawyer} />
-      ) : selectedPracticeArea ? (
-        <SchemaMarkup type="practiceArea" practiceArea={selectedPracticeArea} lawyers={filteredLawyers} />
-      ) : selectedLocation ? (
-        <SchemaMarkup type="location" location={selectedLocation} lawyers={filteredLawyers} />
-      ) : (
-        <>
-          <SchemaMarkup type="homepage" lawyers={lawyers} />
-          <SchemaMarkup type="directory" lawyers={lawyers} />
-        </>
-      )}
-
       <SEOHead type="homepage" />
       <SchemaMarkup type="homepage" lawyers={lawyers} />
       
@@ -839,13 +814,14 @@ function App() {
                         <Star key={i} className="h-6 w-6 text-yellow-300 fill-current" />
                       ))}
                     </div>
-                    
+                    className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 cursor-pointer"
+                    onClick={() => handleLawyerClick(lawyer)}
                     <blockquote className="text-xl md:text-2xl font-medium mb-6 leading-relaxed">
                       "{testimonials[currentTestimonial].text}"
                     </blockquote>
                     
                     <div className="flex items-center justify-center">
-                      <div className="text-center">
+                          {lawyer.name} – Leading {lawyer.practiceAreas[0]} Specialist in {lawyer.location}
                         <div className="font-bold text-lg">{testimonials[currentTestimonial].name}</div>
                         <div className="text-blue-200">{testimonials[currentTestimonial].role}</div>
                       </div>
