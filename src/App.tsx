@@ -16,7 +16,6 @@ function App() {
   const [selectedCity, setSelectedCity] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [selectedLawyer, setSelectedLawyer] = useState<Lawyer | null>(null);
 
   // Animated counter for stats
   const [statsVisible, setStatsVisible] = useState(false);
@@ -497,6 +496,31 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* SEO Head Component */}
+      {selectedLawyer ? (
+        <SEOHead type="lawyer" data={{ lawyer: selectedLawyer }} />
+      ) : selectedPracticeArea ? (
+        <SEOHead type="practiceArea" data={{ practiceArea: selectedPracticeArea }} />
+      ) : selectedLocation ? (
+        <SEOHead type="location" data={{ location: selectedLocation }} />
+      ) : (
+        <SEOHead type="homepage" />
+      )}
+
+      {/* Schema Markup */}
+      {selectedLawyer ? (
+        <SchemaMarkup type="lawyer" lawyer={selectedLawyer} />
+      ) : selectedPracticeArea ? (
+        <SchemaMarkup type="practiceArea" practiceArea={selectedPracticeArea} lawyers={filteredLawyers} />
+      ) : selectedLocation ? (
+        <SchemaMarkup type="location" location={selectedLocation} lawyers={filteredLawyers} />
+      ) : (
+        <>
+          <SchemaMarkup type="homepage" lawyers={lawyers} />
+          <SchemaMarkup type="directory" lawyers={lawyers} />
+        </>
+      )}
+
       <SEOHead type="homepage" />
       <SchemaMarkup type="homepage" lawyers={lawyers} />
       
