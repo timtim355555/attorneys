@@ -330,107 +330,165 @@ function App() {
     'New Orleans': Star // Jazz
   };
   const LawyerCard = ({ lawyer }: { lawyer: Lawyer }) => (
-    <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
-      <div className="flex items-start space-x-4">
-        <div className="relative">
-          <LazyImage
-            src={lawyer.image || 'https://images.pexels.com/photos/3777931/pexels-photo-3777931.jpeg'}
-            alt={lawyer.name}
-            className="w-20 h-20 rounded-xl object-cover"
-            priority={false}
-          />
-          {lawyer.verified && (
-            <div className="absolute -top-2 -right-2 bg-green-500 text-white rounded-full p-1">
-              <CheckCircle className="h-4 w-4" />
+    <div className="bg-white border border-gray-200 rounded-xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+      {/* Header Section */}
+      <div className="mb-6">
+        <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+          {lawyer.name} – Leading {lawyer.practiceAreas[0]} Specialist in {lawyer.location.split(',')[0]}
+        </h3>
+        <div className="w-full h-px bg-gray-300 mb-4"></div>
+      </div>
+
+      {/* Meet Section */}
+      <div className="mb-6">
+        <h4 className="text-lg font-semibold text-gray-800 mb-3">
+          Meet {lawyer.name}: Trusted {lawyer.practiceAreas[0]} Attorney Serving {lawyer.location.split(',')[0]} Clients
+        </h4>
+        <p className="text-gray-700 leading-relaxed">
+          {lawyer.name} brings over {lawyer.experience} years of legal expertise in {lawyer.practiceAreas.join(' and ').toLowerCase()}. 
+          Based in {lawyer.location}, {lawyer.name.split(' ')[0]} is recognized for delivering clear, strategic advice in areas like {lawyer.specializations?.slice(0, 3).join(', ').toLowerCase() || 'complex legal matters, client representation, and strategic counsel'}.
+        </p>
+      </div>
+
+      <div className="w-full h-px bg-gray-300 mb-6"></div>
+
+      {/* Credentials Section */}
+      <div className="mb-6">
+        <h4 className="text-lg font-semibold text-gray-800 mb-4">
+          Credentials, Client Ratings & Contact Details
+        </h4>
+        
+        <div className="space-y-3">
+          {/* Rating */}
+          <div className="flex items-center">
+            <span className="text-gray-700 font-medium mr-3">•</span>
+            <span className="text-gray-700 font-medium mr-2">Rating:</span>
+            <div className="flex items-center">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  className={`h-4 w-4 ${
+                    i < Math.floor(lawyer.rating)
+                      ? 'text-yellow-400 fill-current'
+                      : 'text-gray-300'
+                  }`}
+                />
+              ))}
+              <span className="ml-2 text-gray-700 font-semibold">
+                {lawyer.rating} / 5
+              </span>
+            </div>
+          </div>
+
+          {/* Years of Practice */}
+          <div className="flex items-center">
+            <span className="text-gray-700 font-medium mr-3">•</span>
+            <span className="text-gray-700 font-medium mr-2">Years of Practice:</span>
+            <span className="text-gray-700">Since {new Date().getFullYear() - lawyer.experience}</span>
+          </div>
+
+          {/* Education */}
+          <div className="flex items-center">
+            <span className="text-gray-700 font-medium mr-3">•</span>
+            <span className="text-gray-700 font-medium mr-2">Education:</span>
+            <span className="text-gray-700">{lawyer.education}</span>
+          </div>
+
+          {/* Email */}
+          <div className="flex items-center">
+            <span className="text-gray-700 font-medium mr-3">•</span>
+            <span className="text-gray-700 font-medium mr-2">Email:</span>
+            <a 
+              href={`mailto:${lawyer.email}`}
+              className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+            >
+              {lawyer.email}
+            </a>
+          </div>
+
+          {/* Phone */}
+          <div className="flex items-center">
+            <span className="text-gray-700 font-medium mr-3">•</span>
+            <span className="text-gray-700 font-medium mr-2">Phone:</span>
+            <a 
+              href={`tel:${lawyer.phone}`}
+              className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+            >
+              {lawyer.phone}
+            </a>
+          </div>
+
+          {/* Bar Number if available */}
+          {lawyer.barNumber && (
+            <div className="flex items-center">
+              <span className="text-gray-700 font-medium mr-3">•</span>
+              <span className="text-gray-700 font-medium mr-2">Bar Number:</span>
+              <span className="text-gray-700">{lawyer.barNumber}</span>
+            </div>
+          )}
+
+          {/* Website if available */}
+          {lawyer.website && (
+            <div className="flex items-center">
+              <span className="text-gray-700 font-medium mr-3">•</span>
+              <span className="text-gray-700 font-medium mr-2">Website:</span>
+              <a 
+                href={lawyer.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+              >
+                {lawyer.website}
+              </a>
             </div>
           )}
         </div>
+      </div>
+
+      {/* Practice Areas Tags */}
+      <div className="mb-6">
+        <div className="flex flex-wrap gap-2">
+          {lawyer.practiceAreas.map((area, index) => (
+            <span
+              key={index}
+              className="px-3 py-1 bg-gradient-to-r from-blue-100 to-blue-50 text-blue-800 text-sm rounded-full font-medium border border-blue-200"
+            >
+              {area}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex items-center space-x-4 pt-4 border-t border-gray-200">
+        <a
+          href={`tel:${lawyer.phone}`}
+          className="flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors group-hover:shadow-lg"
+        >
+          <Phone className="h-4 w-4 mr-2" />
+          Call Now
+        </a>
+        <a
+          href={`mailto:${lawyer.email}`}
+          className="flex items-center border border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50 text-sm font-medium transition-colors"
+        >
+          <Mail className="h-4 w-4 mr-2" />
+          Email Attorney
+        </a>
         
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between">
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
-                {lawyer.name}
-              </h3>
-              <div className="flex items-center space-x-2 mb-2">
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-4 w-4 ${
-                        i < Math.floor(lawyer.rating)
-                          ? 'text-yellow-400 fill-current'
-                          : 'text-gray-300'
-                      }`}
-                    />
-                  ))}
-                  <span className="ml-1 text-sm text-gray-600 font-medium">
-                    {lawyer.rating} ({lawyer.reviews} reviews)
-                  </span>
-                </div>
-              </div>
-              
-              <div className="flex items-center text-gray-600 mb-3">
-                <MapPin className="h-4 w-4 mr-1 text-blue-500" />
-                <span className="text-sm font-medium">{lawyer.location}</span>
-                <Clock className="h-4 w-4 ml-4 mr-1 text-green-500" />
-                <span className="text-sm font-medium">{lawyer.experience} years exp.</span>
-              </div>
-              
-              <div className="flex flex-wrap gap-2 mb-4">
-                {lawyer.practiceAreas.slice(0, 3).map((area, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-gradient-to-r from-blue-100 to-blue-50 text-blue-800 text-xs rounded-full font-medium border border-blue-200"
-                  >
-                    {area}
-                  </span>
-                ))}
-                {lawyer.practiceAreas.length > 3 && (
-                  <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
-                    +{lawyer.practiceAreas.length - 3} more
-                  </span>
-                )}
-              </div>
-              
-              <p className="text-gray-700 text-sm line-clamp-2 mb-4">{lawyer.about}</p>
-              
-              <div className="flex items-center space-x-4">
-                <a
-                  href={`tel:${lawyer.phone}`}
-                  className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors group-hover:shadow-lg"
-                >
-                  <Phone className="h-4 w-4 mr-2" />
-                  Call Now
-                </a>
-                <a
-                  href={`mailto:${lawyer.email}`}
-                  className="flex items-center border border-blue-600 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 text-sm font-medium transition-colors"
-                >
-                  <Mail className="h-4 w-4 mr-2" />
-                  Email
-                </a>
-              </div>
-            </div>
-            
-            <div className="text-right">
-              <div className={`px-3 py-1 rounded-full text-xs font-bold ${
-                lawyer.availability === 'Available' 
-                  ? 'bg-green-100 text-green-800 border border-green-200'
-                  : lawyer.availability === 'Limited'
-                  ? 'bg-yellow-100 text-yellow-800 border border-yellow-200'
-                  : 'bg-red-100 text-red-800 border border-red-200'
-              }`}>
-                {lawyer.availability}
-              </div>
-              {lawyer.hourlyRate && (
-                <div className="text-sm font-semibold text-gray-900 mt-2">{lawyer.hourlyRate}</div>
-              )}
-            </div>
+        {/* Availability Badge */}
+        <div className="ml-auto">
+          <div className={`px-4 py-2 rounded-full text-sm font-bold ${
+            lawyer.availability === 'Available' 
+              ? 'bg-green-100 text-green-800 border border-green-200'
+              : lawyer.availability === 'Limited'
+              ? 'bg-yellow-100 text-yellow-800 border border-yellow-200'
+              : 'bg-red-100 text-red-800 border border-red-200'
+          }`}>
+            {lawyer.availability}
           </div>
         </div>
       </div>
-    </div>
   );
 
   return (
