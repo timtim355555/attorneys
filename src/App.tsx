@@ -5,8 +5,6 @@ import { Lawyer } from './types/lawyer';
 import { SEOHead } from './components/SEOHead';
 import { SchemaMarkup } from './components/SchemaMarkup';
 import { LazyImage } from './components/LazyImage';
-import { SEOHead } from './components/SEOHead';
-import { SchemaMarkup } from './components/SchemaMarkup';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
