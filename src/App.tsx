@@ -16,6 +16,7 @@ function App() {
   const [selectedCity, setSelectedCity] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [selectedLawyer, setSelectedLawyer] = useState<Lawyer | null>(null);
 
   // Animated counter for stats
   const [statsVisible, setStatsVisible] = useState(false);
