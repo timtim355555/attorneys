@@ -2,20 +2,20 @@ import { Lawyer } from '../types/lawyer';
 
 export const lawyers: Lawyer[] = [
   {
-    id: 31,
-    name: "Sarah Johnson",
-    practiceAreas: ["Banking Law", "Financial Services", "Corporate Finance"],
-    location: "Washington, DC",
-    phone: "(202) 555-1234",
-    email: "sarah.johnson@dcbankinglaw.com",
-    college: "Georgetown University Law Center, JD",
-    about: "Sarah Johnson brings over 14 years of legal expertise in banking and finance law. Based in Washington, DC, she is recognized for delivering clear, strategic advice in areas like corporate finance, compliance, and regulatory banking issues. She has successfully represented major financial institutions in complex regulatory matters and has extensive experience in banking compliance, securities law, and financial services regulation.",
-    rating: 4.9,
-    reviews: 156,
+    id: 1,
+    name: "Michael McGovern",
+    practiceAreas: ["Corporate Law", "Business Law", "Securities Law"],
+    location: "New York, NY",
+    phone: "(212) 555-0199",
+    email: "michael.mcgovern@mcgovernlaw.com",
+    college: "Harvard Law School, JD",
+    about: "Michael McGovern brings over 18 years of legal expertise in corporate law and business transactions. Based in New York, NY, he is recognized for delivering clear, strategic advice in areas like mergers and acquisitions, securities law, and corporate governance. He has successfully handled complex corporate deals and provides comprehensive legal counsel to Fortune 500 companies and emerging businesses.",
+    rating: 4.8,
+    reviews: 142,
     availability: 'Available'
   },
   {
-    id: 1,
+    id: 2,
     name: "Michael Rodriguez",
     practiceAreas: ["Corporate Law", "Business Law"],
     location: "New York, NY",
@@ -28,7 +28,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 2,
+    id: 3,
     name: "Sarah Chen",
     practiceAreas: ["Criminal Defense", "DUI/DWI"],
     location: "Los Angeles, CA",
@@ -41,7 +41,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Limited'
   },
   {
-    id: 3,
+    id: 4,
     name: "David Thompson",
     practiceAreas: ["Family Law", "Divorce"],
     location: "Chicago, IL",
@@ -54,7 +54,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 4,
+    id: 5,
     name: "Jennifer Martinez",
     practiceAreas: ["Personal Injury", "Medical Malpractice"],
     location: "Houston, TX",
@@ -67,7 +67,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Busy'
   },
   {
-    id: 5,
+    id: 6,
     name: "Robert Kim",
     practiceAreas: ["Immigration Law", "Visa Applications"],
     location: "Seattle, WA",
@@ -80,7 +80,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 6,
+    id: 7,
     name: "Amanda Foster",
     practiceAreas: ["Real Estate Law", "Property Disputes"],
     location: "Miami, FL",
@@ -93,7 +93,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Limited'
   },
   {
-    id: 7,
+    id: 8,
     name: "James Wilson",
     practiceAreas: ["Tax Law", "IRS Representation"],
     location: "San Francisco, CA",
@@ -106,7 +106,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 8,
+    id: 9,
     name: "Lisa Patel",
     practiceAreas: ["Employment Law", "Workplace Discrimination"],
     location: "Boston, MA",
@@ -119,7 +119,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Busy'
   },
   {
-    id: 9,
+    id: 10,
     name: "Christopher Lee",
     practiceAreas: ["Intellectual Property", "Patent Law"],
     location: "Austin, TX",
@@ -132,7 +132,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 10,
+    id: 11,
     name: "Michelle Brown",
     practiceAreas: ["Estate Planning", "Wills and Trusts"],
     location: "Denver, CO",
@@ -145,7 +145,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Limited'
   },
   {
-    id: 11,
+    id: 12,
     name: "Daniel Garcia",
     practiceAreas: ["Bankruptcy Law", "Debt Relief"],
     location: "Phoenix, AZ",
@@ -158,7 +158,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 12,
+    id: 13,
     name: "Rachel Johnson",
     practiceAreas: ["Environmental Law", "Regulatory Compliance"],
     location: "Portland, OR",
@@ -171,7 +171,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Busy'
   },
   {
-    id: 13,
+    id: 14,
     name: "Kevin O'Connor",
     practiceAreas: ["Healthcare Law", "Medical Compliance"],
     location: "Atlanta, GA",
@@ -184,7 +184,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 14,
+    id: 15,
     name: "Stephanie Davis",
     practiceAreas: ["Securities Law", "Investment Compliance"],
     location: "Charlotte, NC",
@@ -197,7 +197,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Limited'
   },
   {
-    id: 15,
+    id: 16,
     name: "Mark Anderson",
     practiceAreas: ["Construction Law", "Contract Disputes"],
     location: "Las Vegas, NV",
@@ -210,7 +210,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 16,
+    id: 17,
     name: "Nicole Taylor",
     practiceAreas: ["Elder Law", "Guardianship"],
     location: "Tampa, FL",
@@ -223,7 +223,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Busy'
   },
   {
-    id: 17,
+    id: 18,
     name: "Brian Miller",
     practiceAreas: ["Insurance Law", "Claims Defense"],
     location: "San Antonio, TX",
@@ -236,7 +236,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 18,
+    id: 19,
     name: "Angela White",
     practiceAreas: ["Education Law", "Student Rights"],
     location: "Minneapolis, MN",
@@ -249,7 +249,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Limited'
   },
   {
-    id: 19,
+    id: 20,
     name: "Thomas Clark",
     practiceAreas: ["Aviation Law", "Transportation"],
     location: "Dallas, TX",
@@ -262,7 +262,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 20,
+    id: 21,
     name: "Samantha Lewis",
     practiceAreas: ["Entertainment Law", "Media Rights"],
     location: "Los Angeles, CA",
@@ -275,7 +275,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Busy'
   },
   {
-    id: 21,
+    id: 22,
     name: "William Johnson",
     practiceAreas: ["Workers' Compensation", "Workplace Injuries"],
     location: "Detroit, MI",
@@ -288,7 +288,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 22,
+    id: 23,
     name: "Patricia Wilson",
     practiceAreas: ["Social Security Disability", "Disability Benefits"],
     location: "Cleveland, OH",
@@ -301,7 +301,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Limited'
   },
   {
-    id: 23,
+    id: 24,
     name: "Robert Davis",
     practiceAreas: ["Military Law", "Veterans' Rights"],
     location: "Norfolk, VA",
@@ -314,7 +314,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 24,
+    id: 25,
     name: "Mary Garcia",
     practiceAreas: ["Consumer Protection", "Debt Collection Defense"],
     location: "Albuquerque, NM",
@@ -327,7 +327,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Busy'
   },
   {
-    id: 25,
+    id: 26,
     name: "Charles Brown",
     practiceAreas: ["Civil Rights", "Constitutional Law"],
     location: "Birmingham, AL",
@@ -340,7 +340,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 26,
+    id: 27,
     name: "Linda Martinez",
     practiceAreas: ["Nonprofit Law", "Tax-Exempt Organizations"],
     location: "Salt Lake City, UT",
@@ -353,7 +353,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Limited'
   },
   {
-    id: 27,
+    id: 28,
     name: "Steven Anderson",
     practiceAreas: ["Energy Law", "Oil and Gas"],
     location: "Houston, TX",
@@ -366,7 +366,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 28,
+    id: 29,
     name: "Karen Wilson",
     practiceAreas: ["Privacy Law", "Data Protection"],
     location: "San Jose, CA",
@@ -379,7 +379,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Busy'
   },
   {
-    id: 29,
+    id: 30,
     name: "Paul Thompson",
     practiceAreas: ["Maritime Law", "Admiralty"],
     location: "New Orleans, LA",
@@ -392,7 +392,7 @@ export const lawyers: Lawyer[] = [
     availability: 'Available'
   },
   {
-    id: 30,
+    id: 31,
     name: "Susan Clark",
     practiceAreas: ["Cybersecurity Law", "Technology Compliance"],
     location: "Austin, TX",
