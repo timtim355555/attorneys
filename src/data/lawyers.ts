@@ -2,6 +2,19 @@ import { Lawyer } from '../types/lawyer';
 
 export const lawyers: Lawyer[] = [
   {
+    id: 31,
+    name: "Sarah Johnson",
+    practiceAreas: ["Banking Law", "Financial Services", "Corporate Finance"],
+    location: "Washington, DC",
+    phone: "(202) 555-1234",
+    email: "sarah.johnson@dcbankinglaw.com",
+    college: "Georgetown University Law Center, JD",
+    about: "Sarah Johnson brings over 14 years of legal expertise in banking and finance law. Based in Washington, DC, she is recognized for delivering clear, strategic advice in areas like corporate finance, compliance, and regulatory banking issues. She has successfully represented major financial institutions in complex regulatory matters and has extensive experience in banking compliance, securities law, and financial services regulation.",
+    rating: 4.9,
+    reviews: 156,
+    availability: 'Available'
+  },
+  {
     id: 1,
     name: "Michael Rodriguez",
     practiceAreas: ["Corporate Law", "Business Law"],
